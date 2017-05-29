@@ -11,6 +11,7 @@ import logging
 import argparse
 from pymongo import MongoClient
 
+responses_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'responses')
 APIKEY = os.environ.get('GOOGLE_API_KEY')
 
 
@@ -27,100 +28,110 @@ class Base:
         return client.happyfinder_db
 
     @staticmethod
-    def get_load(api_url):
+    def write_response(response, fname):
+        with open(os.path.join(responses_dir, fname), 'wb') as f:
+            f.write(response.content)
+
+    def get_load(self, api_url, fname):
+        print(api_url)
         res = requests.get(api_url)
-        print(json.loads(res.content))
-        return json.loads(res.content)
+        self.write_response(res, fname)
+        if res.status_code == 400:
+            return dict({None: None})
+        str_response = res.content.decode('utf-8')
+        return json.loads(str_response)
 
 
 class GoogleDetails(Base):
-    def __init__(self):
+    def __init__(self, place_id):
         super().__init__()
-        self.place_id = None
-        self.google_api_url = "https://maps.googleapis.com/maps/api/place/details/json?placeid={}&key={}".format(
-            self.place_id, self.GOOGLE_API_KEY)
+        self.place_id = place_id
 
     @property
     def google_api_data(self):
-        return self.get_load(self.google_api_url)
+        return self.get_load("https://maps.googleapis.com/maps/api/place/details/json?placeid={}&key={}".format(
+            self.place_id, self.GOOGLE_API_KEY), 'GOOGLE_API_DATA.txt')
 
     @property
     def lat(self):
-        return str(self.google_api_data.get('result').get('geometry').get('location').get('lat'))
+        return str(self.google_api_data['result'].get('geometry').get('location').get('lat'))
 
     @property
     def lng(self):
-        return str(self.google_api_data.get('result').get('geometry').get('location').get('lng'))
+        return str(self.google_api_data['result'].get('geometry').get('location').get('lng'))
 
     @property
     def name(self):
-        return str(self.google_api_data.get('result').get('name'))
+        return str(self.google_api_data.get('name'))
 
 
-class FoursquareDetails(GoogleDetails, Base):
+class FoursquareDetails(GoogleDetails):
     @property
     def foursquare_api_data_url(self):
-        return "https://api.foursquare.com/v2/venues/search?intent=match&ll={}{}&query={}&client_id={}&client_secret=%s&v=20170109".format(
-            str(self.lat), str(self.lat), self.name, self.FOURSQUARE_CLIENT_ID, self.FOURSQUARE_CLIENT_SECRET)
+        return "https://api.foursquare.com/v2/venues/search?intent=match&ll={},{}&query={}&client_id={}&client_secret={}&v=20170109".format(
+            str(self.lat), str(self.lng), self.name, self.FOURSQUARE_CLIENT_ID, self.FOURSQUARE_CLIENT_SECRET)
 
     @property
     def foursquare_api_venue_url(self):
         return "https://api.foursquare.com/v2/venues/{}/menu?client_id={}&client_secret={}&v=20170109".format(
             self.fs_venue_id, self.FOURSQUARE_CLIENT_ID, self.FOURSQUARE_CLIENT_SECRET)
 
-    @property
     def get_foursquare_venue_details(self):
-        return self.get_load(self.foursquare_api_venue_url)
+        return self.get_load(self.foursquare_api_venue_url, 'FS_VENUE_DETAILS.txt')
 
     @property
     def foursquare_venue_details(self):
-        return self.get_foursquare_venue_details
+        return self.get_foursquare_venue_details()
 
     @property
     def fs_venue_id(self):
-        return str(self.foursquare_venue_details.get('response').get('venues')[0].get('id', '0'))
+        try:
+            return self.foursquare_api_data.get('venues')[0].get('id', '0')
+        except TypeError:
+            return None
 
     @property
     def foursquare_api_data(self):
-        return self.get_load(self.foursquare_api_data_url)
+        return self.get_load(self.foursquare_api_data_url, 'FS_API_DATA.txt')
 
     @property
     def happy_hour_string(self):
-        for menu in self.foursquare_venue_details.get('response').get('menu').get('menus').get('items', [
+        for menu in self.foursquare_venue_details.get('menu').get('menus').get('items', [
             {'name': '', 'description': ''}]):
             if 'happy hour' in str(menu.get('name', '')).lower() or \
                             'happy hour' in str(menu.get('description', '')).lower():
                 self.has_happy_hour = True
+                logging.debug(menu.get('description').lower())
                 return menu.get('description').lower()
         pass
 
-    def __dict__(self):
-        return {
-            'happy_hour_string': self.happy_hour_string,
-            'foursquare_details': self.foursquare_venue_details,
-            'venue_id': self.fs_venue_id,
-            'latitude': self.lat,
-            'longitude': self.lng,
-            'name': self.name,
-        }
 
-
-class GooglePlaces(FoursquareDetails, Base):
+class GooglePlaces(GoogleDetails):
     def google_api_places_url(self, coordinates=None, radius=None):
         return "https://maps.googleapis.com/maps/api/place/radarsearch/json?location={}&radius={}&types=restaurant&key={}".format(
             coordinates, radius, self.GOOGLE_API_KEY)
 
     def get_places_list(self, **kwargs):
-        return self.get_load(self.google_api_places_url(**kwargs)).get('results')
+        return self.get_load(self.google_api_places_url(**kwargs), 'PLACES_LIST.txt').get('results')
 
     def get_place_info(self, coordinates, radius):
         for place in self.get_places_list(coordinates=coordinates, radius=radius):
-            print(place.get('place_id'))
-            self.place_id = place['place_id']
-            place_instance = FoursquareDetails()
-            print(self.foursquare_venue_details.__dict__)
-            if place_instance.has_happy_hour:
-                self.db_connection.happyfinder.insert_one(self.foursquare_venue_details.__dict__)
+            self.place_id = place.get('place_id')
+            place_instance = FoursquareDetails(self.place_id)
+            print(place_instance.foursquare_api_data)
+            logging.debug(place_instance.fs_venue_id)
+            logging.debug(place_instance.google_api_data)
+            logging.debug(place_instance.foursquare_api_data)
+            if place_instance.fs_venue_id:
+                if place_instance.happy_hour_string:
+                    # self.db_connection.happyfinder.insert_one()
+                    print(place)
+
+    def __repr__(self):
+        return "place_id: {}, lat: {}, lng:{}, has_happy: {}, name: {}".format(self.place_id, self.lat,
+                                                                               self.lng,
+                                                                               self.has_happy_hour,
+                                                                               self.name)
 
 
 def scrape():
@@ -144,7 +155,7 @@ def scrape():
             # time.sleep(1825)  # delay for one hour once 5000 queries has been hit
             # loc.location = str(current_lat) + ',' + str(current_lng)
             # GooglePlaces.get_place_info('{}{}'.format(lat, lng), '1610')
-            place = GooglePlaces()
+            place = GooglePlaces(place_id=None)
             place.get_place_info(coordinates='{},{}'.format(lat, lng), radius=1610)
             current_lng += 0.016635
         current_lng = -95.594788
@@ -207,9 +218,9 @@ if __name__ == "__main__":
     #         url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=%s&key=%s" % (
     #             urllib.quote_plus(self.place_id), urllib.quote_plus(APIKEY))
     #         g_place_deets = ApiConnect.get_load(url)
-    #         self.lat = str(g_place_deets.get('result').get('geometry').get('location').get('lat'))
-    #         self.lng = str(g_place_deets.get('result').get('geometry').get('location').get('lng'))
-    #         self.name = str(g_place_deets.get('result').get('name'))
+    #         self.lat = str(g_place_deets.get('geometry').get('location').get('lat'))
+    #         self.lng = str(g_place_deets.get('geometry').get('location').get('lng'))
+    #         self.name = str(g_place_deets.get('name'))
     #
     #         # Curl to get Foursquare venue ID
     #         url = ("https://api.foursquare.com/v2/venues/search?intent=match&ll=%s"
@@ -221,10 +232,10 @@ if __name__ == "__main__":
     #                 )
     #                )
     #         fs_venue_search = ApiConnect.get_load(url)
-    #         if fs_venue_search.get('response').get('venues'):
-    #             self.fs_venue_id = str(fs_venue_search.get('response'). \
+    #         if fs_venue_search.get('venues'):
+    #             self.fs_venue_id = str(fs_venue_search. \
     #                                    get('venues')[0].get('id', '0'))
-    #             address = (fs_venue_search.get('response'). \
+    #             address = (fs_venue_search. \
     #                        get('venues')[0].get('location').get('formattedAddress', ''))
     #             self.address = str(address[0])
     #         # Curl to get Foursquare happy hour menu description
@@ -236,7 +247,7 @@ if __name__ == "__main__":
     #                     )
     #                    )
     #             fs_venue_deets = ApiConnect.get_load(url)
-    #             for menu in fs_venue_deets.get('response').get('menu').get('menus') \
+    #             for menu in fs_venue_deets.get('menu').get('menus') \
     #                     .get('items', [{'name': '', 'description': ''}]):
     #                 if 'happy hour' in str(menu.get('name', '')).lower() or \
     #                                 'happy hour' in str(menu.get('description', '')).lower():

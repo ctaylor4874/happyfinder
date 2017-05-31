@@ -2,16 +2,20 @@
 Module holds the object models for the Happy Hour app
 """
 import os
-import csv
 import requests
 import time
 import json
 import logging
 import argparse
-from pymongo import MongoClient
-from pymongo.errors import DuplicateKeyError
+import contextlib
+import sqlalchemy
+from sqlalchemy.orm import sessionmaker
+from sqlalchemy.exc import IntegrityError
 
 responses_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'responses')
+
+engine = sqlalchemy.create_engine(os.environ.get('HAPPYFINDER_ENGINE'), encoding='utf8')
+Session = sessionmaker(engine)
 
 
 class Base:
@@ -20,11 +24,6 @@ class Base:
         self.FOURSQUARE_CLIENT_ID = os.environ.get('FOURSQUARE_CLIENT_ID')
         self.FOURSQUARE_CLIENT_SECRET = os.environ.get('FOURSQUARE_CLIENT_SECRET')
         self.has_happy_hour = False
-
-    @property
-    def db_connection(self):
-        client = MongoClient('mongodb://localhost:27017/')
-        return client.happyfinder_db
 
     @staticmethod
     def write_response(response, fname):
@@ -61,61 +60,55 @@ class GoogleDetails(Base):
 
     @property
     def result(self):
-        if 'result' in self.data:
-            return self.data['result']
+        return self.data['result'] if 'result' in self.data else None
 
     @property
     def address(self):
-        if 'formatted_address' in self.result:
-            return self.result['formatted_address']
-        pass
+        return self.result['formatted_address'] if 'formatted_address' in self.result else None
+
+    @property
+    def url(self):
+        return self.result['website'] if 'website' in self.result else None
 
     @property
     def phone_number(self):
-        if 'formatted_phone_number' in self.result:
-            return self.result['formatted_phone_number']
+        return self.result['formatted_phone_number'] if 'formatted_phone_number' in self.result else None
 
     @property
     def opening_hours(self):
-        if 'opening_hours' in self.result:
-            return self.result['opening_hours']
-        return {}
+        return self.result['opening_hours'] if 'opening_hours' in self.result else {}
 
     @property
     def hours(self):
-        if 'weekday_text' in self.opening_hours:
-            return self.opening_hours['weekday_text']
-        return {}
+        return self.opening_hours['weekday_text'] if 'weekday_text' in self.opening_hours else {}
 
     @property
     def rating(self):
-        if 'rating' in self.result:
-            return self.result['rating']
+        return self.result['rating'] if 'rating' in self.result else None
 
     @property
     def geometry(self):
-        if 'geometry' in self.result:
-            return self.result['geometry']
+        return self.result['geometry'] if 'geometry' in self.result else None
 
     @property
     def location(self):
-        if 'location' in self.geometry:
-            return self.geometry['location']
+        return self.geometry['location'] if 'location' in self.geometry else None
 
     @property
     def lat(self):
-        if 'lat' in self.location:
-            return str(self.location['lat'])
+        return str(self.location['lat']) if 'lat' in self.location else None
 
     @property
     def lng(self):
-        if 'lng' in self.location:
-            return str(self.location['lng'])
+        return str(self.location['lng']) if 'lng' in self.location else None
 
     @property
     def name(self):
-        if 'name' in self.result:
-            return self.result['name']
+        return self.result['name'] if 'name' in self.result else None
+
+    @property
+    def price(self):
+        return self.result['price_level'] if 'price_level' in self.result else None
 
     def __repr__(self):
         return "<Google Details: name: {}, lat: {}, lng: {}, rating: {}, hours: {}, phone_number: {}, address: {}>".format(
@@ -136,38 +129,27 @@ class FoursquareDetails(Base):
 
     @property
     def res(self):
-        if 'response' in self.foursquare_api_data:
-            return self.foursquare_api_data['response']
+        return self.foursquare_api_data['response'] if 'response' in self.foursquare_api_data else None
 
     @property
     def has_venues(self):
-        if 'venues' in self.res:
-            return bool(self.res['venues'])
-
-    @property
-    def category(self):
-        if 'categories' in self.venues()[0]:
-            return self.venues()[0]['categories']['shortName']
-
-    @property
-    def url(self):
-        if 'url' in self.venues()[0]:
-            return self.venues()[0]['url']
+        return bool(self.res['venues']) if 'venues' in self.res else None
 
     @property
     def fs_venue_id(self):
         if self.has_venues:
-            if 'id' in self.venues()[0]:
-                return self.venues()[0]['id']
+            return self.venues()[0]['id'] if 'id' in self.venues()[0] else None
+
+    @property
+    def category(self):
+        if self.has_venues:
+            return self.venues()[0]['categories'][0]['shortName'] if 'categories' in self.venues()[0] else None
 
     def has_menu(self):
-        if 'has_menu' in self.res:
-            return True
-        return False
+        return True if 'has_menu' in self.res else False
 
     def venues(self):
-        if 'venues' in self.res:
-            return self.res['venues']
+        return self.res['venues'] if 'venues' in self.res else None
 
 
 class FoursquareVenueDetails(FoursquareDetails, Base):
@@ -179,26 +161,19 @@ class FoursquareVenueDetails(FoursquareDetails, Base):
 
     @property
     def res_detailed(self):
-        if 'response' in self.foursquare_venue_details:
-            return self.foursquare_venue_details['response']
+        return self.foursquare_venue_details['response'] if 'response' in self.foursquare_venue_details else None
 
     @property
     def menu(self):
-        if 'menu' in self.res_detailed:
-            return self.res_detailed['menu']
-        return {}
+        return self.res_detailed['menu'] if 'menu' in self.res_detailed else {}
 
     @property
     def menus(self):
-        if 'menus' in self.menu:
-            return self.menu['menus']
-        return {}
+        return self.menu['menus'] if 'menus' in self.menu else {}
 
     @property
     def menu_items(self):
-        if 'items' in self.menus:
-            return self.menus['items']
-        return {}
+        return self.menus['items'] if 'items' in self.menus else {}
 
     @property
     def happy_hour_string(self):
@@ -207,21 +182,24 @@ class FoursquareVenueDetails(FoursquareDetails, Base):
                 if 'happy' in self.menu_name(menu) or 'happy' in self.menu_description(menu):
                     self.has_happy_hour = True
                     return self.menu_description(menu)
+                if 'entries' in menu:
+                    if 'items' in menu['entries']:
+                        for item in menu['entries']['items']:
+                            if 'name' in item:
+                                if 'happy' in item['name'].lower():
+                                    self.has_happy_hour = True
+                                    return None
         except AttributeError as e:
             logging.info(e)
             return None
 
     @staticmethod
     def menu_name(menu):
-        if 'name' in menu:
-            return menu['name'].lower()
-        return ''
+        return menu['name'].lower() if 'name' in menu else ''
 
     @staticmethod
     def menu_description(menu):
-        if 'description' in menu:
-            return menu['description'].lower()
-        return ''
+        return menu['description'].lower() if 'description' in menu else ''
 
     def __repr__(self):
         return "<FS Details: has_happy_hour: {}, happy_hour_string: {}, has_venues_list: {}, fs_venue_id: {}, >".format(
@@ -246,55 +224,71 @@ class GooglePlaces(Base):
             if fs.has_menu and fs.has_venues:
                 fs_detailed = FoursquareVenueDetails(google_details)
                 logging.info(fs_detailed)
-                if fs_detailed.happy_hour_string:
-                    data = dict({
-                        'name': google_details.name or None,
-                        'location': {
-                            'lat': google_details.lat or None,
-                            'lng': google_details.lng or None,
-                        },
-                        'hours': google_details.hours or None,
-                        'rating': google_details.rating or None,
-                        'phone_number': google_details.phone_number or None,
-                        'address': google_details.address or None,
-                        'happy_hour_string': fs_detailed.happy_hour_string or None,
-                        'url': fs.url or None,
-                        'category': fs.category or None,
-                        'fs_venue_id': fs_detailed.fs_venue_id or None
-                    })
-                    file_exists = os.path.isfile(os.path.join(responses_dir, 'HAPPY_HOURS.csv'))
-                    try:
-                        self.db_connection.happyfinder.insert_one(data)
-                    except DuplicateKeyError as e:
-                        logging.info(e)
-                        pass
-                    with open(os.path.join(responses_dir, 'HAPPY_HOURS.csv'), 'a') as f:
-                        w = csv.DictWriter(f, data.keys())
-                        if not file_exists:
-                            w.writeheader()
-                        w.writerow(data)
-                    logging.info('ROW WRITTEN: {}'.format(data))
+                if fs_detailed.has_happy_hour:
+                    sql = """
+                       INSERT INTO happyfinder_schema.happyfinder(happyfinder.name, lat, lng, hours, 
+                       rating, phone_number, address, happy_hour_string, url, category, fs_venue_id, google_id, price)
+                       VALUES(:v_name, :lat, :lng, :hours, :rating, :phone_number, :address, :happy_hour_string,
+                       :url, :category, :fs_venue_id, :google_id, :price);
+                       """
+                    with contextlib.closing(Session()) as s:
+                        try:
+                            s.execute(sql, params={
+                                'v_name': google_details.name.encode('utf-8') or None,
+                                'lat': float(google_details.lat) or None,
+                                'lng': float(google_details.lng) or None,
+                                'hours': json.dumps(google_details.hours,
+                                                    ensure_ascii=False) if google_details.hours else None,
+                                'rating': float(google_details.rating) if google_details.rating else None,
+                                'phone_number': google_details.phone_number.encode(
+                                    'utf-8') if google_details.phone_number else None,
+                                'address': google_details.address.encode('utf-8') if google_details.address else None,
+                                'happy_hour_string': fs_detailed.happy_hour_string.encode(
+                                    'utf-8') if fs_detailed.happy_hour_string else None,
+                                'url': google_details.url.encode('utf-8') if google_details.url else None,
+                                'category': fs_detailed.category.encode('utf-8') if fs_detailed.category else None,
+                                'fs_venue_id': fs_detailed.fs_venue_id.encode('utf-8') or None,
+                                'google_id': place_id.encode('utf-8') or None,
+                                'price': google_details.price if google_details.price else None
+                            })
+                            print(google_details.url)
+                            print(fs_detailed.category)
+
+                        except IntegrityError or Exception as e:
+                            s.rollback()
+                            if IntegrityError:
+                                logging.info(e)
+                                pass
+                            else:
+                                raise
+                        else:
+                            s.commit()
+                            logging.info("!!!!!!!!!!!!!!!STORED!!!!!!!!!!!!!!!!!!!!")
 
 
 def scrape():
+    # RA Sushi Test
+    # 29.740886, -95.448189
+    # 29.742731, -95.441666
+
     # Houston Scrape
     # 29.590177, -95.556335
 
-    current_lat = 29.580623
-    current_lng = -95.660706
+    current_lat = 29.590177
+    current_lng = -95.556335
 
     # end at top right location
     # Houston Scrape End
     # 29.928755, -95.210266
-    lat = 30.197366
-    lng = -95.171814
+    lat = 29.928755
+    lng = -95.210266
 
     while current_lat < lat:
         while current_lng < lng:
             place = GooglePlaces()
             place.get_place_info(coordinates='{},{}'.format(current_lat, current_lng), radius=1610)
             current_lng += 0.016635
-        current_lng = -95.660706
+        current_lng = -95.556335
         current_lat += 0.014466
     logging.info('FINISHED')
 

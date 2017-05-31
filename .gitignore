@@ -178,3 +178,4 @@ xcuserdata/
 *.xccheckout
 *.xcscmblueprint
 /api/db.sqlite3
+!/happyfinder-react/src/index.js

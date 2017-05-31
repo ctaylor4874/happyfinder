@@ -9,6 +9,7 @@ import json
 import logging
 import argparse
 from pymongo import MongoClient
+from pymongo.errors import DuplicateKeyError
 
 responses_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'responses')
 APIKEY = os.environ.get('GOOGLE_API_KEY')
@@ -44,8 +45,10 @@ class Base:
             if res.status_code == 200:
                 logging.info('Limit Remaining: {}'.format(res.headers.pop('X-RateLimit-Remaining')))
             if res.status_code == 403:
-                logging.info('Rate Limit will Reset at: {}'.format(res.headers.pop('X-RateLimit-Reset')))
-                time.sleep(1825)  # delay for one hour once 5000 queries has been hit
+                reset_time = float(res.headers.pop('X-RateLimit-Reset'))
+                logging.info('Rate Limit will Reset at: {}'.format(reset_time))
+                while time.time() < reset_time:
+                    time.sleep(5)
         if res.status_code == 400:
             pass
 
@@ -55,7 +58,7 @@ class GoogleDetails(Base):
         super().__init__()
         self.place_id = place_id
         self.data = self.get_load("https://maps.googleapis.com/maps/api/place/details/json?placeid={}&key={}".format(
-            self.place_id, self.GOOGLE_API_KEY), 'GOOGLE_API_DATA.txt')
+            self.place_id, self.GOOGLE_API_KEY), 'GOOGLE_API_DATA.json')
 
     @property
     def result(self):
@@ -130,12 +133,33 @@ class FoursquareDetails(Base):
         self.foursquare_api_data = self.get_load(
             "https://api.foursquare.com/v2/venues/search?intent=match&ll={},{}&query={}&client_id={}&client_secret={}&v=20170109".format(
                 str(self.lat), str(self.lng), self.name, self.FOURSQUARE_CLIENT_ID, self.FOURSQUARE_CLIENT_SECRET),
-            'FS_API_DATA.txt')
+            'FS_API_DATA.json')
 
     @property
     def res(self):
         if 'response' in self.foursquare_api_data:
             return self.foursquare_api_data['response']
+
+    @property
+    def has_venues(self):
+        if 'venues' in self.res:
+            return bool(self.res['venues'])
+
+    @property
+    def category(self):
+        if 'categories' in self.venues()[0]:
+            return self.venues()[0]['categories']['shortName']
+
+    @property
+    def url(self):
+        if 'url' in self.venues()[0]:
+            return self.venues()[0]['url']
+
+    @property
+    def fs_venue_id(self):
+        if self.has_venues:
+            if 'id' in self.venues()[0]:
+                return self.venues()[0]['id']
 
     def has_menu(self):
         if 'has_menu' in self.res:
@@ -146,24 +170,13 @@ class FoursquareDetails(Base):
         if 'venues' in self.res:
             return self.res['venues']
 
-    @property
-    def has_venues(self):
-        if 'venues' in self.res:
-            return bool(self.res['venues'])
-
-    @property
-    def fs_venue_id(self):
-        if self.has_venues:
-            if 'id' in self.venues()[0]:
-                return self.venues()[0]['id']
-
 
 class FoursquareVenueDetails(FoursquareDetails, Base):
     def __init__(self, google_details):
         super().__init__(google_details)
         self.foursquare_venue_details = self.get_load(
             "https://api.foursquare.com/v2/venues/{}/menu?client_id={}&client_secret={}&v=20170109".format(
-                self.fs_venue_id, self.FOURSQUARE_CLIENT_ID, self.FOURSQUARE_CLIENT_SECRET), 'FS_VENUE_DETAILS.txt')
+                self.fs_venue_id, self.FOURSQUARE_CLIENT_ID, self.FOURSQUARE_CLIENT_SECRET), 'FS_VENUE_DETAILS.json')
 
     @property
     def res_detailed(self):
@@ -188,6 +201,17 @@ class FoursquareVenueDetails(FoursquareDetails, Base):
             return self.menus['items']
         return {}
 
+    @property
+    def happy_hour_string(self):
+        try:
+            for menu in self.menu_items:
+                if 'happy' in self.menu_name(menu) or 'happy' in self.menu_description(menu):
+                    self.has_happy_hour = True
+                    return self.menu_description(menu)
+        except AttributeError as e:
+            logging.info(e)
+            return None
+
     @staticmethod
     def menu_name(menu):
         if 'name' in menu:
@@ -199,17 +223,6 @@ class FoursquareVenueDetails(FoursquareDetails, Base):
         if 'description' in menu:
             return menu['description'].lower()
         return ''
-
-    @property
-    def happy_hour_string(self):
-        try:
-            for menu in self.menu_items:
-                if 'happy' in self.menu_name(menu) or 'happy' in self.menu_description(menu):
-                    self.has_happy_hour = True
-                    return self.menu_description(menu)
-        except AttributeError as e:
-            logging.info(e)
-            return None
 
     def __repr__(self):
         return "<FS Details: has_happy_hour: {}, happy_hour_string: {}, has_venues_list: {}, fs_venue_id: {}, >".format(
@@ -223,7 +236,7 @@ class GooglePlaces(Base):
             coordinates, radius, self.GOOGLE_API_KEY)
 
     def get_places_list(self, **kwargs):
-        return self.get_load(self.google_api_places_url(**kwargs), 'PLACES_LIST.txt').get('results')
+        return self.get_load(self.google_api_places_url(**kwargs), 'PLACES_LIST.json').get('results')
 
     def get_place_info(self, coordinates, radius):
         for place in self.get_places_list(coordinates=coordinates, radius=radius):
@@ -237,16 +250,25 @@ class GooglePlaces(Base):
                 if fs_detailed.happy_hour_string:
                     data = dict({
                         'name': google_details.name or None,
-                        'lat': google_details.lat or None,
-                        'lng': google_details.lng or None,
+                        'location': {
+                            'lat': google_details.lat or None,
+                            'lng': google_details.lng or None,
+                        },
                         'hours': google_details.hours or None,
                         'rating': google_details.rating or None,
                         'phone_number': google_details.phone_number or None,
                         'address': google_details.address or None,
                         'happy_hour_string': fs_detailed.happy_hour_string or None,
+                        'url': fs.url or None,
+                        'category': fs.category or None,
                         'fs_venue_id': fs_detailed.fs_venue_id or None
                     })
                     file_exists = os.path.isfile(os.path.join(responses_dir, 'HAPPY_HOURS.csv'))
+                    try:
+                        self.db_connection.happyfinder.insert_one(data)
+                    except DuplicateKeyError as e:
+                        logging.info(e)
+                        pass
                     with open(os.path.join(responses_dir, 'HAPPY_HOURS.csv'), 'a') as f:
                         w = csv.DictWriter(f, data.keys())
                         if not file_exists:
@@ -259,21 +281,21 @@ def scrape():
     # Houston Scrape
     # 29.590177, -95.556335
 
-    current_lat = 29.739638
-    current_lng = -95.446815
+    current_lat = 29.580623
+    current_lng = -95.660706
 
     # end at top right location
     # Houston Scrape End
     # 29.928755, -95.210266
-    lat = 29.743513
-    lng = -95.441666
+    lat = 30.197366
+    lng = -95.171814
 
     while current_lat < lat:
         while current_lng < lng:
             place = GooglePlaces()
-            place.get_place_info(coordinates='{},{}'.format(lat, lng), radius=1610)
+            place.get_place_info(coordinates='{},{}'.format(current_lat, current_lng), radius=1610)
             current_lng += 0.016635
-        current_lng = -95.441666
+        current_lng = -95.660706
         current_lat += 0.014466
     logging.info('FINISHED')
 
@@ -284,161 +306,3 @@ if __name__ == "__main__":
     args = argparser.parse_args()
     logging.basicConfig(level=args.loglevel, format='%(asctime)s:{}'.format(logging.BASIC_FORMAT))
     scrape()
-    # print"Started"
-    #
-    # querycount = 0
-    #
-    # class ApiConnect(object):
-    #     """
-    #     Holds Curl procedures to get info from our API partners
-    #     """
-    #
-    #     @staticmethod
-    #     def get_load(api_call):
-    #         """
-    #         Performs Curl with PyCurl using the GET method. Opens/closes each conn.
-    #         Args: Full URL for the API call
-    #         Returns: getvalue of JSON load from API
-    #         """
-    #         global querycount
-    #         if api_call.find("foursquare") == -1:
-    #             querycount += 1
-    #             print querycount
-    #         url = urllib.urlopen(api_callapi_call).read()
-    #         return json.loads(url)
-    #
-    #
-    #
-    # class LatLong(object):
-    #     """
-    #     User superclass. Stores basic lat / lon data for each user as a comma-separated string value
-    #     """
-    #
-    #     def __init__(self):
-    #         self.location = ''
-    #
-    #
-    # class Place(object):
-    #     """
-    #     Place superclass. Gets various detail attributes from the Foursquare api
-    #     using Curl. Requires a Foursquare venue_id to construct.
-    #     """
-    #
-    #     def __init__(self, place_id):
-    #         self.place_id = place_id
-    #         self.happy_string = ''
-    #         self.has_happy_hour = False
-    #         # Curl to get place details from Google
-    #         url = "https://maps.googleapis.com/maps/api/place/details/json?placeid=%s&key=%s" % (
-    #             urllib.quote_plus(self.place_id), urllib.quote_plus(APIKEY))
-    #         g_place_deets = ApiConnect.get_load(url)
-    #         self.lat = str(g_place_deets.get('geometry').get('location').get('lat'))
-    #         self.lng = str(g_place_deets.get('geometry').get('location').get('lng'))
-    #         self.name = str(g_place_deets.get('name'))
-    #
-    #         # Curl to get Foursquare venue ID
-    #         url = ("https://api.foursquare.com/v2/venues/search?intent=match&ll=%s"
-    #                "&query=%s&client_id=%s&client_secret=%s&v=20170109" %
-    #                ((str(self.lat + ',' + self.lng)),
-    #                 urllib.quote_plus(self.name),
-    #                 urllib.quote_plus(FS_CLIENT_ID),
-    #                 urllib.quote_plus(FS_SECRET)
-    #                 )
-    #                )
-    #         fs_venue_search = ApiConnect.get_load(url)
-    #         if fs_venue_search.get('venues'):
-    #             self.fs_venue_id = str(fs_venue_search. \
-    #                                    get('venues')[0].get('id', '0'))
-    #             address = (fs_venue_search. \
-    #                        get('venues')[0].get('location').get('formattedAddress', ''))
-    #             self.address = str(address[0])
-    #         # Curl to get Foursquare happy hour menu description
-    #             url = ("https://api.foursquare.com/v2/venues/%s/menu?client_id=%s&client_"
-    #                    "secret=%s&v=20170109" %
-    #                    (urllib.quote_plus(self.fs_venue_id),
-    #                     urllib.quote_plus(FS_CLIENT_ID),
-    #                     urllib.quote_plus(FS_SECRET)
-    #                     )
-    #                    )
-    #             fs_venue_deets = ApiConnect.get_load(url)
-    #             for menu in fs_venue_deets.get('menu').get('menus') \
-    #                     .get('items', [{'name': '', 'description': ''}]):
-    #                 if 'happy hour' in str(menu.get('name', '')).lower() or \
-    #                                 'happy hour' in str(menu.get('description', '')).lower():
-    #                     self.happy_string = menu.get('description').lower()
-    #                     self.has_happy_hour = True
-    #                     break
-    #
-    #     @staticmethod
-    #     def get_places(coords, radius='1609'):
-    #         """
-    #         Gets all places within a certain meter radius of a geo using FourSquare
-    #         Args: coords - comma-separated string in the format 'lat,long'
-    #               radius - string of meters, max 50000, def. 1600. Ex: '32000'
-    #         Returns: list of Place object instances
-    #         """
-    #         url = (
-    #             "https://maps.googleapis.com/maps/api/place/radarsearch/json?location=%s&radius=%s&types=restaurant&key=%s" %
-    #             (coords, urllib.quote_plus(radius), urllib.quote_plus(APIKEY)))
-    #         places_list = ApiConnect.get_load(url).get('results')
-    #         for place in places_list:
-    #             place_id = [place][0].get('place_id')
-    #             place_instance = Place(place_id)
-    #             if place_instance.has_happy_hour:
-    #                 sel = """
-    #                 SELECT address FROM happy_finder_schema.happy_strings WHERE address = :address;
-    #                 """
-    #                 with contextlib.closing(Session()) as s:
-    #                     selection = s.execute(sel, params={'address': place_instance.address}).fetchall()
-    #                 if not selection:
-    #                     sql = """
-    #                     INSERT INTO happy_finder_schema.happy_strings(happy_text, venue_id, address, latitude, longitude)
-    #                     VALUES(:happy_text, :venue_id, :address, :latitude, :longitude);
-    #                     """
-    #                     with contextlib.closing(Session()) as s:
-    #                         try:
-    #                             s.execute(sql, params={
-    #                                 'happy_text': place_instance.happy_string,
-    #                                 'venue_id': place_instance.fs_venue_id,
-    #                                 'address': place_instance.address,
-    #                                 'latitude': float(place_instance.lat),
-    #                                 'longitude': float(place_instance.lng)
-    #                             })
-    #                         except Exception:
-    #                             s.rollback()
-    #                             raise
-    #                         else:
-    #                             s.commit()
-    #                             print "!!!!!!!!!!!!!!!STORED!!!!!!!!!!!!!!!!!!!!"
-    #
-    # def scrape():
-    #     ####Austin Scrape
-    #     # start here!!
-    #     # 30.254154,-97.73598
-    #
-    #     current_lat = 29.575846
-    #     current_lng = -95.594788
-    #     # current_lat = 29.738744
-    #     # current_lng = -95.465012
-    #     # end at top right location
-    #     lat = 30.161752
-    #     lng = -95.202026
-    #     global querycount
-    #     while current_lat < lat:
-    #         while current_lng < lng:
-    #             if querycount >= 3000:  # number of queries to 4square
-    #                 print 'pausing'
-    #                 querycount = 0
-    #                 time.sleep(1825)  # delay for one hour once 5000 queries has been hit
-    #             loc = LatLong()
-    #             loc.location = str(current_lat) + ',' + str(current_lng)
-    #             print loc.location
-    #             Place.get_places(loc.location, '1610')
-    #             current_lng += 0.016635
-    #         current_lng = -95.594788
-    #         current_lat += 0.014466
-    #     print "*****FINISHED*****"
-    #
-    #
-    # # calls scraper function
-    # scrape()

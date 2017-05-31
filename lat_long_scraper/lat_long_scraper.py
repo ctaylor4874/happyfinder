@@ -12,7 +12,6 @@ from pymongo import MongoClient
 from pymongo.errors import DuplicateKeyError
 
 responses_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'responses')
-APIKEY = os.environ.get('GOOGLE_API_KEY')
 
 
 class Base:

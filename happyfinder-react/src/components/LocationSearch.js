@@ -2,35 +2,77 @@
  * Created by cody on 5/31/17.
  */
 import React, {Component} from 'react';
-import {Field} from 'redux-form';
+import {connect} from 'react-redux';
+import {reduxForm, Field} from 'redux-form';
 
-import RenderRequiredField from './RenderField';
+import RaisedButton from 'material-ui/RaisedButton';
+import {renderTextField} from './RenderTextField'
+import {getVenues} from '../actions/index';
+import {style} from './style';
 
-export default class LocationSearch extends Component {
+const buttonStyle = {
+  margin: 12,
+};
+
+class LocationSearch extends Component {
+  constructor(props) {
+    super(props);
+
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  onSubmit(props) {
+    this.props.getVenues(props)
+  }
+
   render() {
-    const {handleSubmit, pristine, submitting} = this.props.props;
-    const {onSubmit} = this.props;
-
+    const {handleSubmit, pristine, submitting} = this.props;
     return (
-      <form onSubmit={handleSubmit(onSubmit)}>
+      <form onSubmit={handleSubmit(this.onSubmit)}>
         <div className="col-xs-12">
           <Field
-            className="location-input"
-            type="text"
             name="userLocation"
-            component={RenderRequiredField}
-            placeholder="Enter a location..."
+            component={renderTextField}
+            id="input-field"
+            hintStyle={style}
+            hintText="Enter a Location..."
           />
         </div>
         <div className="col-xs-12">
-          <button
+          <RaisedButton
             type="submit"
+            label="Search"
+            primary={true}
             disabled={pristine || submitting}
-            className="btn btn-primary form-control location-button"
-          >Search
-          </button>
+            style={buttonStyle}
+          />
         </div>
       </form>
     )
   }
 }
+
+function validate(values) {
+  const errors = {};
+  if (!values.userLocation) {
+    errors.userLocation = 'Enter a location...';
+  }
+  return errors;
+}
+
+function mapStateToProps(state) {
+  return {
+    errors: state.errors,
+    isLoading: state.isLoading,
+  }
+}
+LocationSearch = reduxForm({
+  form: 'LocationSearchForm',
+  validate
+})(LocationSearch);
+
+LocationSearch = connect(mapStateToProps, {
+  getVenues,
+})(LocationSearch);
+
+export default LocationSearch;

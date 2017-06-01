@@ -1,23 +1,24 @@
-import React, { Component } from 'react';
-import header from './images/header.jpg';
+import React, {Component} from 'react';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+
 import './App.css';
 import HomePage from './containers/HomePage';
 
 class App extends Component {
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <img src={header} className="App-header-image" alt="header" />
-        </div>
-          <h1 className="welcome-header">Welcome To HappyFinder!</h1>
-          <HomePage/>
-        <p className="App-intro">
-          HappyFinder finds happy hours near the given location!<br />Try it out!
-        </p>
-      </div>
-    );
-  }
+    render() {
+        return (
+            <MuiThemeProvider muiTheme={getMuiTheme()}>
+                <div className="App">
+                    <h1 className="welcome-header"><strong>Welcome To HappyFinder!</strong></h1>
+                    <HomePage/>
+                    <p className="App-intro">
+                        HappyFinder finds happy hours near the given location!<br /><br />Try it out!
+                    </p>
+                </div>
+            </MuiThemeProvider>
+        );
+    }
 }
 
 export default App;

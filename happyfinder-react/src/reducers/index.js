@@ -4,8 +4,15 @@
 import {combineReducers} from 'redux';
 import { reducer as formReducer } from 'redux-form';
 
+import venues from './VenuesReducer';
+import isLoading from './LoadingReducer';
+import errors from './ErrorsReducer'
+
 const rootReducer = combineReducers({
   form: formReducer,
+  errors,
+  isLoading,
+  venues,
 });
 
 export default rootReducer;

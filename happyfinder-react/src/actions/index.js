@@ -1,15 +1,23 @@
 import axios from 'axios';
 
-const ROOT_URL = 'http://maps.googleapis.com/maps/api/geocode/json?';
+export const GET_VENUES = 'GET_VENUES';
+export const ERROR = 'ERROR';
+export const IS_LOADING = 'IS_LOADING';
+const ROOT_URL = 'http://localhost:3001';
 
-export function getAPI() {
-  const url = `${ROOT_URL}address=${props.location}&key=${GOOGLE_KEY}`;
+function getAPIData(props) {
+  console.log(props);
+  const url = `${ROOT_URL}/venues?address=${props.userLocation}`;
   return axios.get(url);
 }
-export default function getNurseData() {
-  getAPI().then(
+export function getVenues(props) {
+  console.log(props)
+  return dispatch => getAPIData(props).then(
     (response) => {
-      this.setState({ records: response.data.records });
+      dispatch({type: GET_VENUES, payload: response});
     },
-  );
+    (error) => {
+      dispatch({type: ERROR, payload: error.response});
+    },
+  )
 }

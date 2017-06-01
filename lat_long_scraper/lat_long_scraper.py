@@ -267,28 +267,31 @@ class GooglePlaces(Base):
 
 
 def scrape():
-    # RA Sushi Test
-    # 29.740886, -95.448189
-    # 29.742731, -95.441666
+    # Austin Start
+    # 30.173625, -97.830505
 
     # Houston Scrape
     # 29.590177, -95.556335
 
-    current_lat = 29.590177
-    current_lng = -95.556335
+    current_lat = 30.270336
+    current_lng = -97.789745
 
     # end at top right location
     # Houston Scrape End
     # 29.928755, -95.210266
-    lat = 29.928755
-    lng = -95.210266
+
+    # Austin End
+    # 30.647364, -97.605286
+
+    lat = 30.647364
+    lng = -97.605286
 
     while current_lat < lat:
         while current_lng < lng:
             place = GooglePlaces()
             place.get_place_info(coordinates='{},{}'.format(current_lat, current_lng), radius=1610)
             current_lng += 0.016635
-        current_lng = -95.556335
+        current_lng = -97.830505
         current_lat += 0.014466
     logging.info('FINISHED')
 

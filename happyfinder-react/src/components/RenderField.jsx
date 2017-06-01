@@ -9,7 +9,7 @@ const renderRequiredField = field => (
       placeholder={field.placeholder}
       autoComplete="off"
       type={field.type}
-      className="form-control"
+      className="form-control location-input"
       {...field.input}
     />
   </div>

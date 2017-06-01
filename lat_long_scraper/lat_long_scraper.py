@@ -96,11 +96,11 @@ class GoogleDetails(Base):
 
     @property
     def lat(self):
-        return str(self.location['lat']) if 'lat' in self.location else None
+        return self.location['lat'] if 'lat' in self.location else None
 
     @property
     def lng(self):
-        return str(self.location['lng']) if 'lng' in self.location else None
+        return self.location['lng'] if 'lng' in self.location else None
 
     @property
     def name(self):
@@ -235,11 +235,11 @@ class GooglePlaces(Base):
                         try:
                             s.execute(sql, params={
                                 'v_name': google_details.name.encode('utf-8') or None,
-                                'lat': float(google_details.lat) or None,
-                                'lng': float(google_details.lng) or None,
+                                'lat': google_details.lat or None,
+                                'lng': google_details.lng or None,
                                 'hours': json.dumps(google_details.hours,
                                                     ensure_ascii=False) if google_details.hours else None,
-                                'rating': float(google_details.rating) if google_details.rating else None,
+                                'rating': google_details.rating if google_details.rating else None,
                                 'phone_number': google_details.phone_number.encode(
                                     'utf-8') if google_details.phone_number else None,
                                 'address': google_details.address.encode('utf-8') if google_details.address else None,

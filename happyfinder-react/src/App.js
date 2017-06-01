@@ -10,9 +10,10 @@ class App extends Component {
         <div className="App-header">
           <img src={header} className="App-header-image" alt="header" />
         </div>
+          <h1 className="welcome-header">Welcome To HappyFinder!</h1>
           <HomePage/>
         <p className="App-intro">
-          To get started, edit <code>src/App.js</code> and save to reload.
+          HappyFinder finds happy hours near the given location!<br />Try it out!
         </p>
       </div>
     );

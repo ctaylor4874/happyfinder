@@ -6,7 +6,7 @@ import {Field} from 'redux-form';
 
 import RenderRequiredField from './RenderField';
 
-export default class LocationSearch extends Component{
+export default class LocationSearch extends Component {
   render() {
     const {handleSubmit, pristine, submitting} = this.props.props;
     const {onSubmit} = this.props;
@@ -15,6 +15,7 @@ export default class LocationSearch extends Component{
       <form onSubmit={handleSubmit(onSubmit)}>
         <div className="col-xs-12">
           <Field
+            className="location-input"
             type="text"
             name="userLocation"
             component={RenderRequiredField}
@@ -25,8 +26,9 @@ export default class LocationSearch extends Component{
           <button
             type="submit"
             disabled={pristine || submitting}
-            className="btn btn-primary form-control"
-          >Search</button>
+            className="btn btn-primary form-control location-button"
+          >Search
+          </button>
         </div>
       </form>
     )

@@ -273,8 +273,8 @@ def scrape():
     # Houston Scrape
     # 29.590177, -95.556335
 
-    current_lat = 30.270336
-    current_lng = -97.789745
+    current_lat = 37.099003
+    current_lng = -122.492065
 
     # end at top right location
     # Houston Scrape End
@@ -283,15 +283,15 @@ def scrape():
     # Austin End
     # 30.647364, -97.605286
 
-    lat = 30.647364
-    lng = -97.605286
+    lat = 38.022131
+    lng = -121.931763
 
     while current_lat < lat:
         while current_lng < lng:
             place = GooglePlaces()
             place.get_place_info(coordinates='{},{}'.format(current_lat, current_lng), radius=1610)
             current_lng += 0.016635
-        current_lng = -97.830505
+        current_lng = -122.492065
         current_lat += 0.014466
     logging.info('FINISHED')
 

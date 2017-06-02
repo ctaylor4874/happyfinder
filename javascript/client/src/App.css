@@ -9,7 +9,11 @@ html {
 .App {
     text-align: center;
 }
-
+#select-field *{
+    color: orange !important;
+    font-size: 35px !important;
+    text-shadow: 0 0 4px black !important;
+}
 #input-field {
     font-weight: 600 !important;
     color: rgb(0, 188, 212) !important;
@@ -29,7 +33,13 @@ html {
     max-height: 150px;
     color: white;
 }
-
+.finder-text{
+    font-weight: 800;
+    font-size: 50px;
+    color: lavender;
+    letter-spacing: 1px;
+    text-shadow: 0 0 5px black;
+}
 .App-intro {
     margin-top: 50px;
     font-weight: 600;

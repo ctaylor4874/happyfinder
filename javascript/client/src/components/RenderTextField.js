@@ -9,9 +9,6 @@ export const renderTextField = ({input, label, meta: {touched, error}, ...custom
     hintText={label}
     floatingLabelText={label}
     errorText={touched && error}
-    multiLine={true}
-    rows={4}
-    rowsMax={4}
     {...input}
     {...custom}
   />

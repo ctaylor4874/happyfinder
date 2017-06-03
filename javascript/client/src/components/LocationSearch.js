@@ -35,29 +35,29 @@ class LocationSearch extends Component {
     const {handleSubmit, pristine, submitting} = this.props;
     return (
       <form onSubmit={handleSubmit(this.onSubmit)}>
-        <h1 className="finder-text">Find Happy Hours within</h1>
+        <h1 className="finder-text">Find Happy Hours</h1>
         <div className="col-xs-12">
           <Field
             name="radius"
             component={renderSelectField}
-            label="Select Miles..."
+            label="Within..."
             id="select-field"
           >
-            <MenuItem value={5} menuItemStyle={selectStyle} primaryText="5"/>
-            <MenuItem value={10} menuItemStyle={selectStyle} primaryText="10"/>
-            <MenuItem value={15} menuItemStyle={selectStyle} primaryText="15"/>
-            <MenuItem value={20} menuItemStyle={selectStyle} primaryText="20"/>
-            <MenuItem value={5000} menuItemStyle={selectStyle} primaryText="50+"/>
+            <MenuItem value={5} menuItemStyle={selectStyle} primaryText="5 miles"/>
+            <MenuItem value={10} menuItemStyle={selectStyle} primaryText="10 miles"/>
+            <MenuItem value={15} menuItemStyle={selectStyle} primaryText="15 miles"/>
+            <MenuItem value={20} menuItemStyle={selectStyle} primaryText="20 miles"/>
+            <MenuItem value={5000} menuItemStyle={selectStyle} primaryText="50+ miles"/>
           </Field>
         </div>
-        <h1 className="finder-text">Miles of</h1>
+        <br/>
         <div className="col-xs-12">
           <Field
             name="userLocation"
             component={renderTextField}
             id="input-field"
             hintStyle={style}
-            hintText="Enter a Location..."
+            hintText="Location..."
           />
         </div>
 

@@ -27,6 +27,7 @@ const pool = mysql.createPool({
 function handle_database(req, res) {
   pool.getConnection(function (err, connection) {
     if (err) {
+      console.log(err)
       connection.release();
       res.json({"code": 100, "status": "Error in connection database"});
       return;
@@ -36,6 +37,7 @@ function handle_database(req, res) {
 
     connection.query(req, function (err, rows) {
       connection.release();
+      console.log(req)
       if (!err) {
         res.json(rows);
       } else {
@@ -73,7 +75,6 @@ const query = (userLat, userLng, radius) => (
 app.get("/api/:userLocation/:radius", function (req, res) {
   let userLocation = req.params.userLocation;
   let radius = req.params.radius || 20;
-
   getUserLatLng(userLocation)
     .then(
       (response) => {
@@ -88,6 +89,7 @@ app.get("/api/:userLocation/:radius", function (req, res) {
 });
 
 const getData = (url) => {
+  axios.get(url);
   return axios.get(url);
 };
 const makeURL = (userLocation) => {

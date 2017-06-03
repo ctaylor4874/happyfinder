@@ -10,13 +10,13 @@ html {
     text-align: center;
 }
 #select-field *{
-    color: orange !important;
-    font-size: 35px !important;
+    color: lightgray !important;
+    font-size: 25px !important;
     text-shadow: 0 0 4px black !important;
 }
 #input-field {
     font-weight: 600 !important;
-    color: rgb(0, 188, 212) !important;
+    color: lightgray !important;
     font-size: 30px !important;
     overflow: hidden !important;
     text-shadow: 0 0 4px black !important;
@@ -31,14 +31,14 @@ html {
 
 .App-header {
     max-height: 150px;
-    color: white;
+    color: lightgray;
 }
 .finder-text{
-    font-weight: 800;
-    font-size: 50px;
-    color: lavender;
+    font-weight: 700;
+    font-size: 40px;
+    color: lightgray;
     letter-spacing: 1px;
-    text-shadow: 0 0 5px black;
+    text-shadow: 2px 2px 2px black;
 }
 .App-intro {
     margin-top: 50px;
@@ -46,7 +46,7 @@ html {
     font-size: 30px;
     color: lightgray;
     letter-spacing: 1px;
-    text-shadow: 0 0 5px black;
+    text-shadow: 2px 2px 2px black;
 }
 
 /*@keyframes App-logo-spin {*/

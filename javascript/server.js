@@ -27,7 +27,6 @@ const pool = mysql.createPool({
 function handle_database(req, res) {
   pool.getConnection(function (err, connection) {
     if (err) {
-      console.log(err)
       connection.release();
       res.json({"code": 100, "status": "Error in connection database"});
       return;
@@ -37,7 +36,6 @@ function handle_database(req, res) {
 
     connection.query(req, function (err, rows) {
       connection.release();
-      console.log(req)
       if (!err) {
         res.json(rows);
       } else {
@@ -50,16 +48,7 @@ function handle_database(req, res) {
     });
   });
 }
-// ("SELECT location_id, (acos(sin(lat * 0.0175) * sin($1 * 0.0175)"
-//                " + cos(lat * 0.0175) * cos($2 * 0.0175) * cos(($3 * 0.0175) -"
-//                " (lng * 0.0175))) * 3959) AS milesfromuser FROM"
-//                " happyhour.public.coordinates WHERE (acos(sin(lat * 0.0175) *"
-//                " sin($4 * 0.0175) + cos(lat * 0.0175) * cos($5 * 0.0175) *"
-//                " cos(($6 * 0.0175) - (lng * 0.0175))) * 3959 <= $7) ORDER BY"
-//                " milesfromuser ASC LIMIT 10;"
-//                )
-//         venue_id_objects = DbConnect.get_named_results(sql, False, lat, lat, \
-//                                                        lng, lat, lat, lng, radius)
+
 const query = (userLat, userLng, radius) => (
   `SELECT *, 
   (acos(sin(lat * 0.0175) * sin(${userLat} * 0.0175) + cos(lat * 0.0175) * 

@@ -8,7 +8,7 @@ const INITIAL_STATE = { venues: {} };
 export default function (state = INITIAL_STATE, action) {
   switch (action.type) {
     case GET_VENUES:
-      return { ...state, venues: action.payload };
+      return { ...state, venues: action.payload.data };
     default:
       return state;
   }

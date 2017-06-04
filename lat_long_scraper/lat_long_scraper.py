@@ -266,7 +266,7 @@ class GooglePlaces(Base):
                             logging.info("!!!!!!!!!!!!!!!STORED!!!!!!!!!!!!!!!!!!!!")
 
 
-def scrape():
+def scrape(current_lat, current_lng):
     # Austin Start
     # 30.173625, -97.830505
 
@@ -276,8 +276,8 @@ def scrape():
     # Denver Start
     # 39.525230, -105.308933
 
-    current_lat = 39.525230
-    current_lng = -105.308933
+    # current_lat = 39.525230
+    # current_lng = -105.308933
 
     # end at top right location
     # Houston Scrape End
@@ -307,6 +307,9 @@ def scrape():
 if __name__ == "__main__":
     argparser = argparse.ArgumentParser()
     argparser.add_argument('-l', '--loglevel', default=20, type=int)
+    argparser.add_argument('-lt', '--lat', default=29.590177, type=float)
+    argparser.add_argument('-ln', '--lng', default=-95.556335, type=float)
     args = argparser.parse_args()
+    print(args.lat, args.lng)
     logging.basicConfig(level=args.loglevel, format='%(asctime)s:{}'.format(logging.BASIC_FORMAT))
-    scrape()
+    scrape(args.lat, args.lng)

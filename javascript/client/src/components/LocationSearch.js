@@ -2,6 +2,8 @@
  * Created by cody on 5/31/17.
  */
 import React, {Component} from 'react';
+import {Redirect, Link} from 'react-router-dom';
+
 import {connect} from 'react-redux';
 import {reduxForm, Field} from 'redux-form';
 import MenuItem from 'material-ui/MenuItem';
@@ -29,10 +31,17 @@ class LocationSearch extends Component {
 
   onSubmit(props) {
     this.props.getVenues(props)
+      .then(
+        console.log('Success')
+      )
   }
 
   render() {
     const {handleSubmit, pristine, submitting} = this.props;
+    if (this.props.venues.length) {
+      return <Redirect to={'/locations'}/>
+    }
+    console.log(this.props.venues)
     return (
       <form onSubmit={handleSubmit(this.onSubmit)}>
         <h1 className="finder-text">Find Happy Hours</h1>
@@ -90,6 +99,7 @@ function mapStateToProps(state) {
   return {
     errors: state.errors,
     isLoading: state.isLoading,
+    venues: state.venues.venues,
   }
 }
 LocationSearch = reduxForm({

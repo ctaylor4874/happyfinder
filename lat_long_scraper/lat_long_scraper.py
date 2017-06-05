@@ -41,7 +41,7 @@ class Base:
     def check_api_response(api_url, res):
         if 'foursquare' in api_url:
             if res.status_code == 200:
-                logging.info('Limit Remaining: {}'.format(res.headers.pop('X-RateLimit-Remaining')))
+                logging.debug('Limit Remaining: {}'.format(res.headers.pop('X-RateLimit-Remaining')))
             if res.status_code == 403:
                 reset_time = float(res.headers.pop('X-RateLimit-Reset'))
                 logging.info('Rate Limit will Reset at: {}'.format(reset_time))
@@ -270,54 +270,54 @@ def scrape():
     # Cities Scraped: Austin, Houston, Denver, Dallas, SF, Boston, NYC, Seattle,
     # Chicago, LA, SLC, Philly, Raleigh, Atlanta
     locations = [{
-        # Boston
+        # SLC
         'start': {
-            'lat': 42.305753,
-            'lng': -71.133728
+            'lat': 40.495004,
+            'lng': -112.100372
         },
         'end': {
-            'lat': 42.394558,
-            'lng': -70.986786
+            'lat': 40.816927,
+            'lng': -111.770782
         }
     }, {
-        # NYC
+        # Greater Houston
         'start': {
-            'lat': 40.540939,
-            'lng': -74.303284
+            'lat': 29.485034,
+            'lng': -95.910645
         },
         'end': {
-            'lat': 40.957086,
-            'lng': -73.611145
+            'lat': 30.287532,
+            'lng': -95.114136
         }
     }, {
-        # Chicago
+        # Philly
         'start': {
-            'lat': 41.580525,
-            'lng': -87.857666
+            'lat': 39.837014,
+            'lng': -75.279694
         },
         'end': {
-            'lat': 42.065607,
-            'lng': -87.624207
+            'lat': 40.151588,
+            'lng': -74.940491
         }
     }, {
-        # LA
+        # Raleigh
         'start': {
-            'lat': 33.550551,
-            'lng': -118.451843
+            'lat': 35.727284,
+            'lng': -78.751373
         },
         'end': {
-            'lat': 34.198173,
-            'lng': -117.718506
+            'lat': 35.827835,
+            'lng': -78.587265
         }
     }, {
-        # Seattle
+        # Atlanta
         'start': {
-            'lat': 47.395560,
-            'lng': -122.408295
+            'lat': 33.588311,
+            'lng': -84.538422
         },
         'end': {
-            'lat': 47.742094,
-            'lng': -122.150116
+            'lat': 33.872696,
+            'lng': -84.295349
         }
     }]
 
@@ -331,10 +331,10 @@ def scrape():
             while current_lng < lng:
                 logging.info('{}, {}'.format(current_lat, current_lng))
                 place = GooglePlaces()
-                place.get_place_info(coordinates='{},{}'.format(current_lat, current_lng), radius=1610)
-                current_lng += 0.016635
+                place.get_place_info(coordinates='{},{}'.format(current_lat, current_lng), radius=805)
+                current_lng += 0.0083175
             current_lng = city['start']['lng']
-            current_lat += 0.014466
+            current_lat += 0.007233
         logging.info('FINISHED')
 
 

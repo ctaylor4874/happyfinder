@@ -36,7 +36,7 @@ export default class MapComponent extends Component {
         lat={coords.lat}
         lng={coords.lng}
         zoom={12}
-        loadingMessage={'Be happy'}
+        loadingMessage={'Loading...'}
         params={params}
         onMapCreated={this.onMapCreated}>
         <Marker
@@ -57,5 +57,4 @@ export default class MapComponent extends Component {
       </Gmaps>
     );
   }
-
 };

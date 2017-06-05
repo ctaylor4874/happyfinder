@@ -41,10 +41,10 @@ class Base:
     def check_api_response(api_url, res):
         if 'foursquare' in api_url:
             if res.status_code == 200:
-                logging.info('Limit Remaining: {}'.format(res.headers.pop('X-RateLimit-Remaining')))
+                logging.debug('Limit Remaining: {}'.format(res.headers.pop('X-RateLimit-Remaining')))
             if res.status_code == 403:
                 reset_time = float(res.headers.pop('X-RateLimit-Reset'))
-                logging.info('Rate Limit will Reset at: {}'.format(reset_time))
+                logging.debug('Rate Limit will Reset at: {}'.format(reset_time))
                 while time.time() < reset_time:
                     time.sleep(5)
         if res.status_code == 400:
@@ -220,10 +220,10 @@ class GooglePlaces(Base):
             place_id = place.get('place_id')
             google_details = GoogleDetails(place_id)
             fs = FoursquareDetails(google_details)
-            logging.info(google_details)
+            logging.debug(google_details)
             if fs.has_menu and fs.has_venues:
                 fs_detailed = FoursquareVenueDetails(google_details)
-                logging.info(fs_detailed)
+                logging.debug(fs_detailed)
                 if fs_detailed.has_happy_hour:
                     sql = """
                        INSERT INTO happyfinder_schema.happyfinder(happyfinder.name, lat, lng, hours, 
@@ -267,88 +267,69 @@ class GooglePlaces(Base):
 
 
 def scrape():
-    # Austin Start
-    # 30.173625, -97.830505
-
-    # Houston Scrape
-    # 29.590177, -95.556335
-
-    # Denver Start
-    # 39.525230, -105.308933
-
-    # current_lat = 39.525230
-    # current_lng = -105.308933
-
-    # end at top right location
-    # Houston Scrape End
-    # 29.928755, -95.210266
-
-    # Austin End
-    # 30.647364, -97.605286
-    # San Francisco End
-    # 38.022131, -121.931763
-
-    # Denver End
-    # 40.693134, -104.76511
+    # Cities Scraped: Austin, Houston, Denver, Dallas, SF, Boston, NYC, Seattle,
+    # Chicago, LA, SLC, Philly, Raleigh, Atlanta
     locations = [{
-        # Boston
+        # SLC
         'start': {
-            'lat': 42.305753,
-            'lng': -71.133728
+            'lat': 40.495004,
+            'lng': -112.100372
         },
         'end': {
-            'lat': 42.394558,
-            'lng': -70.986786
+            'lat': 40.816927,
+            'lng': -111.770782
         }
     }, {
-        # NYC
+        # Greater Houston
         'start': {
-            'lat': 40.540939,
-            'lng': -74.303284
+            'lat': 29.485034,
+            'lng': -95.910645
         },
         'end': {
-            'lat': 40.957086,
-            'lng': -73.611145
+            'lat': 30.287532,
+            'lng': -95.114136
         }
     }, {
-        # Chicago
+        # Philly
         'start': {
-            'lat': 41.580525,
-            'lng': -87.857666
+            'lat': 39.837014,
+            'lng': -75.279694
         },
         'end': {
-            'lat': 42.065607,
-            'lng': -87.624207
+            'lat': 40.151588,
+            'lng': -74.940491
         }
     }, {
-        # LA
+        # Raleigh
         'start': {
-            'lat': 33.550551,
-            'lng': -118.451843
+            'lat': 35.727284,
+            'lng': -78.751373
         },
         'end': {
-            'lat': 34.198173,
-            'lng': -117.718506
+            'lat': 35.827835,
+            'lng': -78.587265
         }
     }, {
-        # Seattle
+        # Atlanta
         'start': {
-            'lat': 47.395560,
-            'lng': -122.408295
+            'lat': 33.588311,
+            'lng': -84.538422
         },
         'end': {
-            'lat': 47.742094,
-            'lng': -122.150116
+            'lat': 33.872696,
+            'lng': -84.295349
         }
     }]
 
     for city in locations:
+        logging.info("Moved to next city...")
         current_lat = city['start']['lat']
         current_lng = city['start']['lng']
         lat = city['end']['lat']
         lng = city['end']['lng']
         while current_lat < lat:
             while current_lng < lng:
+                logging.info('{}, {}'.format(current_lat, current_lng))
                 place = GooglePlaces()
                 place.get_place_info(coordinates='{},{}'.format(current_lat, current_lng), radius=1610)
                 current_lng += 0.016635
@@ -363,6 +344,5 @@ if __name__ == "__main__":
     argparser.add_argument('-lt', '--lat', default=29.590177, type=float)
     argparser.add_argument('-ln', '--lng', default=-95.556335, type=float)
     args = argparser.parse_args()
-    print(args.lat, args.lng)
     logging.basicConfig(level=args.loglevel, format='%(asctime)s:{}'.format(logging.BASIC_FORMAT))
-    scrape(args.lat, args.lng)
+    scrape()

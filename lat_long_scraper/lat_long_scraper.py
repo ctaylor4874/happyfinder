@@ -266,7 +266,7 @@ class GooglePlaces(Base):
                             logging.info("!!!!!!!!!!!!!!!STORED!!!!!!!!!!!!!!!!!!!!")
 
 
-def scrape(current_lat, current_lng):
+def scrape():
     # Austin Start
     # 30.173625, -97.830505
 
@@ -289,19 +289,72 @@ def scrape(current_lat, current_lng):
     # 38.022131, -121.931763
 
     # Denver End
-    # 40.693134, -104.765110
+    # 40.693134, -104.76511
+    locations = [{
+        # Boston
+        'start': {
+            'lat': 42.305753,
+            'lng': -71.133728
+        },
+        'end': {
+            'lat': 42.394558,
+            'lng': -70.986786
+        }
+    }, {
+        # NYC
+        'start': {
+            'lat': 40.540939,
+            'lng': -74.303284
+        },
+        'end': {
+            'lat': 40.957086,
+            'lng': -73.611145
+        }
+    }, {
+        # Chicago
+        'start': {
+            'lat': 41.580525,
+            'lng': -87.857666
+        },
+        'end': {
+            'lat': 42.065607,
+            'lng': -87.624207
+        }
+    }, {
+        # LA
+        'start': {
+            'lat': 33.550551,
+            'lng': -118.451843
+        },
+        'end': {
+            'lat': 34.198173,
+            'lng': -117.718506
+        }
+    }, {
+        # Seattle
+        'start': {
+            'lat': 47.395560,
+            'lng': -122.408295
+        },
+        'end': {
+            'lat': 47.742094,
+            'lng': -122.150116
+        }
+    }]
 
-    lat = 40.693134
-    lng = -104.765110
-
-    while current_lat < lat:
-        while current_lng < lng:
-            place = GooglePlaces()
-            place.get_place_info(coordinates='{},{}'.format(current_lat, current_lng), radius=1610)
-            current_lng += 0.016635
-        current_lng = -105.308933
-        current_lat += 0.014466
-    logging.info('FINISHED')
+    for city in locations:
+        current_lat = city['start']['lat']
+        current_lng = city['start']['lng']
+        lat = city['end']['lat']
+        lng = city['end']['lng']
+        while current_lat < lat:
+            while current_lng < lng:
+                place = GooglePlaces()
+                place.get_place_info(coordinates='{},{}'.format(current_lat, current_lng), radius=1610)
+                current_lng += 0.016635
+            current_lng = -105.308933
+            current_lat += 0.014466
+        logging.info('FINISHED')
 
 
 if __name__ == "__main__":

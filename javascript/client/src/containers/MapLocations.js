@@ -1,69 +1,61 @@
-import PropTypes from 'prop-types'
-import React, {Component} from 'react'
-import {connect} from 'react-redux';
-import {
-  Map,
-  TileLayer,
-  Marker,
-  Popup,
-  PropTypes as MapPropTypes,
-} from 'react-leaflet'
+import React, {Component} from 'react';
+import {Gmaps, Marker, InfoWindow, Circle} from 'react-gmaps';
 
-const MyPopupMarker = ({children, position}) => (
-  <Marker position={position}>
-    <Popup>
-      <span>{children}</span>
-    </Popup>
-  </Marker>
-)
-MyPopupMarker.propTypes = {
-  children: MapPropTypes.children,
-  position: MapPropTypes.latlng,
-}
+const coords = {
+  lat: 51.5258541,
+  lng: -0.08040660000006028
+};
 
-const MyMarkersList = ({markers}) => {
-  const items = markers.map(({key, ...props}) => (
-    <MyPopupMarker key={key} {...props} />
-  ))
-  return <div style={{display: 'none'}}>{items}</div>
-}
-MyMarkersList.propTypes = {
-  markers: PropTypes.array.isRequired,
-}
+const params = {v: '3.exp', key: 'AIzaSyDNztqCQfT8oyE2RszDY5E3XrwLCOSq3jo'};
 
-class MapComponent extends Component {
-  state = {
-    lat: 51.505,
-    lng: -0.09,
-    zoom: 13,
+export default class MapComponent extends Component {
+
+  onMapCreated(map) {
+    map.setOptions({
+      disableDefaultUI: true
+    });
+  }
+
+  onDragEnd(e) {
+    console.log('onDragEnd', e);
+  }
+
+  onCloseClick() {
+    console.log('onCloseClick');
+  }
+
+  onClick(e) {
+    console.log('onClick', e);
   }
 
   render() {
-    const center = [this.state.lat, this.state.lng]
-    // TODO: Render markers from api response
-    const markers = [
-      {key: 'marker1', position: [51.5, -0.1], children: 'My first popup'},
-      {key: 'marker2', position: [51.51, -0.1], children: 'My second popup'},
-      {key: 'marker3', position: [51.49, -0.05], children: 'My third popup'},
-    ]
     return (
-      <Map center={center} zoom={this.state.zoom}>
-        <TileLayer
-          attribution="&amp;copy <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
-          url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
-        />
-        <MyMarkersList markers={markers}/>
-      </Map>
-    )
+      <Gmaps
+        width={'800px'}
+        height={'600px'}
+        lat={coords.lat}
+        lng={coords.lng}
+        zoom={12}
+        loadingMessage={'Be happy'}
+        params={params}
+        onMapCreated={this.onMapCreated}>
+        <Marker
+          lat={coords.lat}
+          lng={coords.lng}
+          draggable={true}
+          onDragEnd={this.onDragEnd} />
+        <InfoWindow
+          lat={coords.lat}
+          lng={coords.lng}
+          content={'Hello, React :)'}
+          onCloseClick={this.onCloseClick} />
+        <Circle
+          lat={coords.lat}
+          lng={coords.lng}
+          radius={500}
+          onClick={this.onClick} />
+      </Gmaps>
+    );
   }
-}
 
-function mapStateToProps(state) {
-  return {
-    errors: state.errors,
-    isLoading: state.isLoading,
-    venues: state.venues.venues,
-  }
-}
-
-export default connect(mapStateToProps)(MapComponent);
+};

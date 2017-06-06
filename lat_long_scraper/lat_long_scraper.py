@@ -224,100 +224,103 @@ class GooglePlaces(Base):
             if fs.has_menu and fs.has_venues:
                 fs_detailed = FoursquareVenueDetails(google_details)
                 logging.debug(fs_detailed)
-                if fs_detailed.has_happy_hour:
-                    sql = """
-                       INSERT INTO happyfinder_schema.happyfinder(happyfinder.name, lat, lng, hours, 
-                       rating, phone_number, address, happy_hour_string, url, category, fs_venue_id, google_id, price)
-                       VALUES(:v_name, :lat, :lng, :hours, :rating, :phone_number, :address, :happy_hour_string,
-                       :url, :category, :fs_venue_id, :google_id, :price);
-                       """
-                    with contextlib.closing(Session()) as s:
-                        try:
-                            s.execute(sql, params={
-                                'v_name': google_details.name.encode('utf-8') or None,
-                                'lat': google_details.lat or None,
-                                'lng': google_details.lng or None,
-                                'hours': json.dumps(google_details.hours,
-                                                    ensure_ascii=False) if google_details.hours else None,
-                                'rating': google_details.rating if google_details.rating else None,
-                                'phone_number': google_details.phone_number.encode(
-                                    'utf-8') if google_details.phone_number else None,
-                                'address': google_details.address.encode('utf-8') if google_details.address else None,
-                                'happy_hour_string': fs_detailed.happy_hour_string.encode(
-                                    'utf-8') if fs_detailed.happy_hour_string else None,
-                                'url': google_details.url.encode('utf-8') if google_details.url else None,
-                                'category': fs_detailed.category.encode('utf-8') if fs_detailed.category else None,
-                                'fs_venue_id': fs_detailed.fs_venue_id.encode('utf-8') or None,
-                                'google_id': place_id.encode('utf-8') or None,
-                                'price': google_details.price if google_details.price else None
-                            })
-                            print(google_details.url)
-                            print(fs_detailed.category)
+                if fs_detailed.happy_hour_string:
+                    logging.info('Has Happy Hour String: {}'.format(fs_detailed.happy_hour_string))
+                    if fs_detailed.has_happy_hour:
+                        sql = """
+                           INSERT INTO happyfinder_schema.happyfinder(happyfinder.name, lat, lng, hours, 
+                           rating, phone_number, address, happy_hour_string, url, category, fs_venue_id, google_id, price)
+                           VALUES(:v_name, :lat, :lng, :hours, :rating, :phone_number, :address, :happy_hour_string,
+                           :url, :category, :fs_venue_id, :google_id, :price);
+                           """
+                        with contextlib.closing(Session()) as s:
+                            logging.info('Storing Data')
+                            try:
+                                s.execute(sql, params={
+                                    'v_name': google_details.name.encode('utf-8') or None,
+                                    'lat': google_details.lat or None,
+                                    'lng': google_details.lng or None,
+                                    'hours': json.dumps(google_details.hours,
+                                                        ensure_ascii=False) if google_details.hours else None,
+                                    'rating': google_details.rating if google_details.rating else None,
+                                    'phone_number': google_details.phone_number.encode(
+                                        'utf-8') if google_details.phone_number else None,
+                                    'address': google_details.address.encode('utf-8') if google_details.address else None,
+                                    'happy_hour_string': fs_detailed.happy_hour_string.encode(
+                                        'utf-8') if fs_detailed.happy_hour_string else None,
+                                    'url': google_details.url.encode('utf-8') if google_details.url else None,
+                                    'category': fs_detailed.category.encode('utf-8') if fs_detailed.category else None,
+                                    'fs_venue_id': fs_detailed.fs_venue_id.encode('utf-8') or None,
+                                    'google_id': place_id.encode('utf-8') or None,
+                                    'price': google_details.price if google_details.price else None
+                                })
+                                print(google_details.url)
+                                print(fs_detailed.category)
 
-                        except IntegrityError or Exception as e:
-                            s.rollback()
-                            if IntegrityError:
-                                logging.info(e)
-                                pass
+                            except IntegrityError or Exception as e:
+                                s.rollback()
+                                if IntegrityError:
+                                    logging.info(e)
+                                    pass
+                                else:
+                                    raise
                             else:
-                                raise
-                        else:
-                            s.commit()
-                            logging.info("!!!!!!!!!!!!!!!STORED!!!!!!!!!!!!!!!!!!!!")
+                                s.commit()
+                                logging.info("!!!!!!!!!!!!!!!STORED!!!!!!!!!!!!!!!!!!!!")
 
 
 def scrape():
     # Cities Scraped: Austin, Houston, Denver, Dallas, SF, Boston, NYC, Seattle,
     # Chicago, LA, SLC, Philly, Raleigh, Atlanta
     locations = [{
-        # SLC
+        # LA
         'start': {
-            'lat': 40.495004,
-            'lng': -112.100372
+            'lat': 33.550551,
+            'lng': -118.451843
         },
         'end': {
-            'lat': 40.816927,
-            'lng': -111.770782
+            'lat': 34.198173,
+            'lng': -117.718506
         }
     }, {
-        # Greater Houston
+        # Boston
         'start': {
-            'lat': 29.485034,
-            'lng': -95.910645
+            'lat': 42.305753,
+            'lng': -71.133728
         },
         'end': {
-            'lat': 30.287532,
-            'lng': -95.114136
+            'lat': 42.394558,
+            'lng': -70.986786
         }
     }, {
-        # Philly
+        # NYC
         'start': {
-            'lat': 39.837014,
-            'lng': -75.279694
+            'lat': 40.540939,
+            'lng': -74.303284
         },
         'end': {
-            'lat': 40.151588,
-            'lng': -74.940491
+            'lat': 40.957086,
+            'lng': -73.611145
         }
     }, {
-        # Raleigh
+        # Chicago
         'start': {
-            'lat': 35.727284,
-            'lng': -78.751373
+            'lat': 41.580525,
+            'lng': -87.857666
         },
         'end': {
-            'lat': 35.827835,
-            'lng': -78.587265
+            'lat': 42.065607,
+            'lng': -87.624207
         }
     }, {
-        # Atlanta
+        # Seattle
         'start': {
-            'lat': 33.588311,
-            'lng': -84.538422
+            'lat': 47.395560,
+            'lng': -122.408295
         },
         'end': {
-            'lat': 33.872696,
-            'lng': -84.295349
+            'lat': 47.742094,
+            'lng': -122.150116
         }
     }]
 

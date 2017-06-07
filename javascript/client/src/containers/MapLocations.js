@@ -1,60 +1,33 @@
 import React, {Component} from 'react';
-import {Gmaps, Marker, InfoWindow, Circle} from 'react-gmaps';
+import { Map, Marker, Popup, TileLayer } from 'react-leaflet';
+import {connect} from 'react-redux';
 
-const coords = {
-  lat: 51.5258541,
-  lng: -0.08040660000006028
-};
-
-const params = {v: '3.exp', key: 'AIzaSyDNztqCQfT8oyE2RszDY5E3XrwLCOSq3jo'};
-
-export default class MapComponent extends Component {
-
-  onMapCreated(map) {
-    map.setOptions({
-      disableDefaultUI: true
-    });
-  }
-
-  onDragEnd(e) {
-    console.log('onDragEnd', e);
-  }
-
-  onCloseClick() {
-    console.log('onCloseClick');
-  }
-
-  onClick(e) {
-    console.log('onClick', e);
-  }
-
+class MapComponent extends Component {
   render() {
     return (
-      <Gmaps
-        width={'800px'}
-        height={'600px'}
-        lat={coords.lat}
-        lng={coords.lng}
-        zoom={12}
-        loadingMessage={'Loading...'}
-        params={params}
-        onMapCreated={this.onMapCreated}>
-        <Marker
-          lat={coords.lat}
-          lng={coords.lng}
-          draggable={true}
-          onDragEnd={this.onDragEnd} />
-        <InfoWindow
-          lat={coords.lat}
-          lng={coords.lng}
-          content={'Hello, React :)'}
-          onCloseClick={this.onCloseClick} />
-        <Circle
-          lat={coords.lat}
-          lng={coords.lng}
-          radius={500}
-          onClick={this.onClick} />
-      </Gmaps>
+      <div className="col-xs-3">
+      <Map center={[33.85433699999997, -117.76149049999967]} zoom={13}>
+    <TileLayer
+      url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
+      attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
+    />
+    <Marker position={[33.85433699999997, -117.76149049999967]}>
+      <Popup>
+        <span>A pretty CSS3 popup.<br/>Easily customizable.</span>
+      </Popup>
+    </Marker>
+  </Map>
+        </div>
     );
   }
-};
+}
+
+function mapStateToProps(state) {
+  return {
+    errors: state.errors,
+    isLoading: state.isLoading,
+    venues: state.venues.venues,
+  }
+}
+
+export default connect(mapStateToProps)(MapComponent)

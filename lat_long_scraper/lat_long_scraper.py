@@ -273,54 +273,64 @@ def scrape():
     # Cities Scraped: Austin, Houston, Denver, Dallas, SF, Boston, NYC, Seattle,
     # Chicago, LA, SLC, Philly, Raleigh, Atlanta
     locations = [{
-        # LA
+        # Atlanta
         'start': {
-            'lat': 33.550551,
-            'lng': -118.451843
+            'lat': 33.863164999999974,
+            'lng': -84.50515199999998
         },
         'end': {
-            'lat': 34.198173,
-            'lng': -117.718506
+            'lat': 33.872696,
+            'lng': -84.295349
         }
     }, {
-        # Boston
+        # SLC
         'start': {
-            'lat': 42.305753,
-            'lng': -71.133728
+            'lat': 40.495004,
+            'lng': -112.100372
         },
         'end': {
-            'lat': 42.394558,
-            'lng': -70.986786
+            'lat': 40.816927,
+            'lng': -111.770782
         }
     }, {
-        # NYC
+        # Greater Houston
         'start': {
-            'lat': 40.540939,
-            'lng': -74.303284
+            'lat': 29.485034,
+            'lng': -95.910645
         },
         'end': {
-            'lat': 40.957086,
-            'lng': -73.611145
+            'lat': 30.287532,
+            'lng': -95.114136
         }
     }, {
-        # Chicago
+        # Philly
         'start': {
-            'lat': 41.580525,
-            'lng': -87.857666
+            'lat': 39.837014,
+            'lng': -75.279694
         },
         'end': {
-            'lat': 42.065607,
-            'lng': -87.624207
+            'lat': 40.151588,
+            'lng': -74.940491
         }
     }, {
-        # Seattle
+        # Raleigh
         'start': {
-            'lat': 47.395560,
-            'lng': -122.408295
+            'lat': 35.727284,
+            'lng': -78.751373
         },
         'end': {
-            'lat': 47.742094,
-            'lng': -122.150116
+            'lat': 35.827835,
+            'lng': -78.587265
+        }
+    }, {
+        # Atlanta
+        'start': {
+            'lat': 33.588311,
+            'lng': -84.538422
+        },
+        'end': {
+            'lat': 33.872696,
+            'lng': -84.295349
         }
     }]
 

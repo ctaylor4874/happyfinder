@@ -5,10 +5,12 @@
   "dependencies": {
     "axios": "^0.16.1",
     "babel-plugin-transform-class-properties": "^6.24.1",
+    "google-maps-react": "^1.0.19",
+    "leaflet": "^1.0.3",
     "material-ui": "^0.18.1",
     "react": "^15.5.4",
     "react-dom": "^15.5.4",
-    "react-gmaps": "^1.6.0",
+    "react-leaflet": "^1.2.2",
     "react-redux": "^5.0.5",
     "react-router-dom": "^4.1.1",
     "react-tap-event-plugin": "^2.0.1",

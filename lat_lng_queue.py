@@ -3,7 +3,8 @@ import logging
 import time
 import json
 
-from scraper.sqs import get_queue
+from helpers import delete_message
+import sqs
 
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 BOTO_REGION = 'us-west-2'
@@ -106,21 +107,20 @@ def get_coordinates(queue):
     message = queue.receive_messages(MaxNumberOfMessages=1)
     if not message:
         return None
-    print(message)
     return message[0]
 
 
 def run():
-    radar_queue = get_queue(BOTO_QUEUE_NAME_RADAR)
-    lat_lng_queue = get_queue(BOTO_QUEUE_NAME_LAT_LNG)
+    radar_queue = sqs.get_queue(BOTO_QUEUE_NAME_RADAR)
+    lat_lng_queue = sqs.get_queue(BOTO_QUEUE_NAME_LAT_LNG)
     while True:
         message = get_coordinates(lat_lng_queue)
         if not message:
             time.sleep(5)
             continue
-        # coordinates = json.loads(message.body)
-        print(message.body)
-        urls = gen_coordinates(coordinates.start_lat, coordinates.start_lng, coordinates.end_lat, coordinates.end_lng)
+        coordinates = json.loads(message.body)
+        urls = gen_coordinates(coordinates['start_lat'], coordinates['start_lng'], coordinates['end_lat'], coordinates['end_lng'])
+        delete_message(lat_lng_queue, message)
         for url in urls:
             response = send_message(radar_queue, url)
             check_errors(response)

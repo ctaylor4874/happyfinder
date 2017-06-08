@@ -2,8 +2,9 @@ import os
 import logging
 import time
 
-from scraper.parsers.helpers import APIHandler
-import scraper.sqs as sqs
+from helpers import APIHandler
+
+import sqs
 
 GOOGLE_API_KEY = os.getenv('GOOGLE_API_KEY')
 BOTO_QUEUE_NAME_RADAR = 'radar_search_queue'

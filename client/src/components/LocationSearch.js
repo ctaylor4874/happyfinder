@@ -2,7 +2,7 @@
  * Created by cody on 5/31/17.
  */
 import React, {Component} from 'react';
-import {Redirect, Link} from 'react-router-dom';
+import {Redirect} from 'react-router-dom';
 
 import {connect} from 'react-redux';
 import {reduxForm, Field} from 'redux-form';
@@ -30,18 +30,16 @@ class LocationSearch extends Component {
   }
 
   onSubmit(props) {
-    this.props.getVenues(props)
-      .then(
-        console.log('Success')
-      )
+    this.props.getVenues(props);
   }
 
   render() {
     const {handleSubmit, pristine, submitting} = this.props;
-    if (this.props.venues.length) {
-      return <Redirect to={'/locations'}/>
+    if (this.props.userInfo.latLng) {
+      let userInfo = this.props.userInfo;
+      return <Redirect
+        to={`/happyhours/${userInfo.userLocation}/${userInfo.radius}/`}/>
     }
-    console.log(this.props.venues)
     return (
       <form onSubmit={handleSubmit(this.onSubmit)}>
         <h1 className="finder-text">Find Happy Hours</h1>
@@ -99,6 +97,7 @@ function mapStateToProps(state) {
   return {
     errors: state.errors,
     isLoading: state.isLoading,
+    userInfo: state.venues.userInfo,
     venues: state.venues.venues,
   }
 }

@@ -12,7 +12,7 @@ const Routes = () => (
       <BrowserRouter>
         <div>
           <Route exact path="/" component={App} />
-          <Route exact path="/locations" component={MapLocations} />
+          <Route exact path="/happyhours/:userLocation/:radius" component={MapLocations} />
         </div>
       </BrowserRouter>
     );

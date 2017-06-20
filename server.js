@@ -21,8 +21,10 @@ const pool = mysql.createPool({
   user,
   password,
   database,
-  debug: false
+  debug: true
 });
+
+let userInfo = [];
 
 function handle_database(req, res) {
   pool.getConnection(function (err, connection) {
@@ -37,6 +39,7 @@ function handle_database(req, res) {
     connection.query(req, function (err, rows) {
       connection.release();
       if (!err) {
+        rows.push(userInfo);
         res.json(rows);
       } else {
         console.log(err);
@@ -61,13 +64,14 @@ const query = (userLat, userLng, radius) => (
   LIMIT 30;`
 );
 
-app.get("/api/:userLocation/:radius", function (req, res) {
+app.get("/happyhours/:userLocation/:radius", function (req, res) {
   let userLocation = req.params.userLocation;
-  let radius = req.params.radius || 20;
+  let radius = req.params.radius || 5;
   getUserLatLng(userLocation)
     .then(
       (response) => {
         let latLng = response.data.results[0].geometry.location;
+        userInfo.push({latLng, userLocation, radius});
         handle_database(query(latLng.lat, latLng.lng, radius), res)
       },
       (error) => {

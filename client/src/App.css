@@ -6,14 +6,20 @@ html {
     background-size: cover;
 }
 
+body {
+    background-color: transparent;
+}
+
 .App {
     text-align: center;
 }
-#select-field *{
+
+#select-field * {
     color: lightgray !important;
     font-size: 25px !important;
     text-shadow: 0 0 4px black !important;
 }
+
 #input-field {
     font-weight: 600 !important;
     color: lightgray !important;
@@ -33,13 +39,15 @@ html {
     max-height: 150px;
     color: lightgray;
 }
-.finder-text{
+
+.finder-text {
     font-weight: 700;
     font-size: 40px;
     color: lightgray;
     letter-spacing: 1px;
     text-shadow: 2px 2px 2px black;
 }
+
 .App-intro {
     margin-top: 50px;
     font-weight: 600;

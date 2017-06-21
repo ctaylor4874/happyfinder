@@ -9,11 +9,10 @@ import {reduxForm, Field} from 'redux-form';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import {selectStyle} from './style';
-import {renderTextField} from './RenderTextField';
-import {renderSelectField} from './RenderSelectField';
+import {selectStyle, style} from '../components/style';
+import {renderTextField} from '../components/RenderTextField';
+import {renderSelectField} from '../components/RenderSelectField';
 import {getVenues} from '../actions/index';
-import {style} from './style';
 
 const buttonStyle = {
   margin: 12,
@@ -26,19 +25,28 @@ class LocationSearch extends Component {
     this.onSubmit = this.onSubmit.bind(this);
     this.state = {
       redirect: false,
+      userLocation: null,
+      radius: null,
     }
   }
 
   onSubmit(props) {
     this.props.getVenues(props)
       .then(
-        (props) => <Redirect to={`/happyhours/${props.userLocation}/${props.radius}`}/>
+        () => this.setState({
+          redirect: true,
+          userLocation: props.userLocation,
+          radius: props.radius
+        })
       );
   }
 
   render() {
-    const {handleSubmit, pristine, submitting, userInfo} = this.props;
-    const {redirect} = this.state;
+    const {handleSubmit, pristine, submitting} = this.props;
+    const {redirect, userLocation, radius} = this.state;
+    if (redirect) {
+      return <Redirect to={`/happyhours/${userLocation}/${radius}`} push />
+    }
     return (
       <form onSubmit={handleSubmit(this.onSubmit)}>
         <h1 className="finder-text">Find Happy Hours</h1>
@@ -52,8 +60,8 @@ class LocationSearch extends Component {
             <MenuItem value={5} menuItemStyle={selectStyle} primaryText="5 miles"/>
             <MenuItem value={10} menuItemStyle={selectStyle} primaryText="10 miles"/>
             <MenuItem value={15} menuItemStyle={selectStyle} primaryText="15 miles"/>
-            <MenuItem value={20} menuItemStyle={selectStyle} primaryText="20 miles"/>
-            <MenuItem value={5000} menuItemStyle={selectStyle} primaryText="50+ miles"/>
+            <MenuItem value={25} menuItemStyle={selectStyle} primaryText="25 miles"/>
+            <MenuItem value={50} menuItemStyle={selectStyle} primaryText="50 miles"/>
           </Field>
         </div>
         <br/>

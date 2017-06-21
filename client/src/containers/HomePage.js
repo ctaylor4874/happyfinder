@@ -3,7 +3,7 @@
  */
 import React, {Component} from 'react';
 
-import LocationSearch from '../components/LocationSearch'
+import LocationSearch from './LocationSearch'
 
 
 class HomePage extends Component {

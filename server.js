@@ -59,7 +59,7 @@ const query = (userLat, userLng, radius) => (
   WHERE (acos(sin(lat * 0.0175) * sin(${userLat} * 0.0175) + cos(lat * 0.0175) * cos(${userLat} * 0.0175) * 
   cos((${userLng} * 0.0175) - (lng * 0.0175))) * 3959 <= ${radius}) 
   ORDER BY milesfromuser ASC 
-  LIMIT 30;`
+  LIMIT 75;`
 );
 
 app.get("/api/:userLocation/:radius", function (req, res) {

@@ -179,3 +179,4 @@ xcuserdata/
 *.xcscmblueprint
 /api/db.sqlite3
 !/happyfinder-react/src/index.js
+!/client/src/containers/MapLocations.js

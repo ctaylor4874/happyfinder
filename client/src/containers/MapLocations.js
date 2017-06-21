@@ -1,35 +1,76 @@
 import React, {Component} from 'react';
-import {Redirect} from 'react-router-dom';
 import {Map, TileLayer} from 'react-leaflet';
+import {latLngBounds} from 'leaflet';
 import {connect} from 'react-redux';
 
+import {infoWindow} from '../components/InfoWindow';
 import {getVenues} from '../actions/index';
 import {makeMarkers} from '../components/Markers';
+import {userMarker} from '../components/UserMarker';
 import {radius} from '../components/SearchRadius';
 
 class MapComponent extends Component {
-  componentWillMount(){
-    this.props.getVenues(this.props.match.params)
+  constructor(props){
+    super(props);
+    this.state = {
+      height: null,
+    }
   }
+  updateDimensions() {
+    const height = window.innerHeight;
+    this.setState({height});
+  }
+
+  componentWillMount() {
+    this.props.getVenues(this.props.match.params)
+      .then(this.updateDimensions());
+  }
+
+  componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions.bind(this));
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions.bind(this));
+  }
+
   render() {
     const {userInfo, venues} = this.props;
+    let bounds;
     if (!(venues.length)) {
-      return(
+      return (
         <div className="container">
           <h1 style={{color: 'white', marginLeft: '20', marginTop: '20'}}>Loading...</h1>
         </div>
       )
+    } else {
+      bounds = latLngBounds([userInfo.latLng.lat, userInfo.latLng.lng]);
+      venues.forEach((data) => {
+        bounds.extend([data.lat, data.lng])
+      });
     }
     return (
-      <div className="col-xs-3">
-        <Map center={[userInfo.latLng.lat, userInfo.latLng.lng]} zoom={12}>
+      <div>
+        <div className="col-sm-6 col-xs-4" style={{backgroundColor: 'rgba(255,255,255,0.5)'}}>
+          {infoWindow(venues, this.refs)}
+        </div>
+      <div className="map-container col-sm-6 col-xs-8" style={{height: this.state.height, paddingRight: 0}}>
+        <Map
+          style={{height: this.state.height}}
+          center={[userInfo.latLng.lat, userInfo.latLng.lng]}
+          ref="map"
+          bounds={bounds}
+          boundsOptions={{padding: [50, 50]}}
+        >
           <TileLayer
             url='http://{s}.tile.osm.org/{z}/{x}/{y}.png'
             attribution='&copy; <a href="http://osm.org/copyright">OpenStreetMap</a> contributors'
           />
           {makeMarkers(venues)}
+          {userMarker(userInfo)}
           {radius(userInfo)}
         </Map>
+      </div>
       </div>
     );
   }

@@ -10,9 +10,9 @@ import errors from './ErrorsReducer'
 
 const rootReducer = combineReducers({
   form: formReducer,
+  venues,
   errors,
   isLoading,
-  venues,
 });
 
 export default rootReducer;

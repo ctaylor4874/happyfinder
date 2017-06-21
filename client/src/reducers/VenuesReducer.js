@@ -8,8 +8,8 @@ const INITIAL_STATE = { venues: {}, userInfo: {} };
 export default function (state = INITIAL_STATE, action) {
   switch (action.type) {
     case GET_VENUES:
-      state = INITIAL_STATE;
       let userInfo = action.payload.data.pop()[0];
+      console.log(userInfo)
       return { ...state, venues: action.payload.data, userInfo };
     default:
       return state;

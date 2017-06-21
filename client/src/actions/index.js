@@ -5,7 +5,7 @@ export const ERROR = 'ERROR';
 export const IS_LOADING = 'IS_LOADING';
 
 function getAPIData(props) {
-  const url = `/happyhours/${props.userLocation}/${props.radius}`;
+  const url = `/api/${props.userLocation}/${props.radius}`;
   return axios.get(url);
 }
 export function getVenues(props) {

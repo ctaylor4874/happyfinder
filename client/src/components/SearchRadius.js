@@ -10,7 +10,7 @@ export const radius = (props) => {
       center={[props.latLng.lat, props.latLng.lng]}
       radius={props.radius * 1609.34}
       fillOpacity={.1}
-      fillColor="red"
+      fillColor="whitesmoke"
       color="blue"
     />
   );

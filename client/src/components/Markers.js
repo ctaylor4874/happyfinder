@@ -10,14 +10,15 @@ function cleanHours(s) {
   s = s.split(', ', '\n');
   return s;
 }
+
 export const makeMarkers = (venues) => (
   venues.map((venue) => {
     return (
       <Marker
         position={[venue.lat, venue.lng]}
-        id={venue.fs_venue_id}
+        data-fsVenueId={venue.fs_venue_id}
         riseOnHover={true}
-        ref={venue.fs_venue_id}
+        ref={Marker => venue.fs_venue_id = Marker}
         // onClick={(e) => e.target.openPopup()}
       >
         <Popup>

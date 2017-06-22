@@ -4,14 +4,42 @@ html {
     -moz-background-size: cover;
     -o-background-size: cover;
     background-size: cover;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
     background-color: transparent;
+    margin: 0 0 70px;
+    padding: 25px;
 }
-
+#github-link{
+    min-width: 80px;
+    max-width: 168px;
+}
+.footer {
+    background-color: orange;
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    height: 70px;
+    width: 100%;
+    overflow:hidden;
+}
 .App {
     text-align: center;
+}
+.info-link{
+    color: black;
+}
+.mailto-link{
+    text-decoration: none !important;
+}
+.info-span{
+    float: right;
+}
+.info-window {
+    text-align: left;
 }
 
 #select-field * {

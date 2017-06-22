@@ -3,6 +3,7 @@ import {Map, TileLayer} from 'react-leaflet';
 import {latLngBounds} from 'leaflet';
 import {connect} from 'react-redux';
 
+import {infoWindow} from '../components/InfoWindow';
 import {getVenues} from '../actions/index';
 import {makeMarkers} from '../components/Markers';
 import {userMarker} from '../components/UserMarker';
@@ -14,11 +15,10 @@ class MapComponent extends Component {
     this.state = {
       height: null,
     };
-    this.infoWindow = this.infoWindow.bind(this);
   }
 
   updateDimensions() {
-    const height = window.innerHeight;
+    const height = window.innerHeight - 134;
     this.setState({height});
   }
 
@@ -34,24 +34,6 @@ class MapComponent extends Component {
   componentWillUnmount() {
     window.removeEventListener("resize", this.updateDimensions.bind(this));
   }
-
-  infoWindow(venue) {
-    return (
-      <div>
-        <h3><a href="#" id={venue.fs_venue_id} onClick={(e) => {
-          let x = document.
-          console.log(x)
-          // this.refs.map.props.children[1].forEach((item) => {
-          //   if (item.props.id === e.target.id){
-          //     console.log(item);
-          //   }
-          // })
-        }}>{venue.name}</a></h3>
-        <p>{venue.category}<span style={{float: 'right'}}>{Math.round(Number(venue.milesfromuser) * 100) / 100}
-          miles</span></p>
-      </div>
-    )
-  };
 
   render() {
     const {userInfo, venues} = this.props;
@@ -70,10 +52,12 @@ class MapComponent extends Component {
     }
     return (
       <div>
-        <div className="col-sm-6 col-xs-4" style={{backgroundColor: 'rgba(255,255,255,0.5)'}}>
-          {this.props.venues.map((venue) => this.infoWindow(venue))}
+        <div
+          className="col-sm-6 col-xs-4"
+          style={{backgroundColor: 'rgba(255,255,255,0.5)', overflowY: 'scroll', height: this.state.height}}>
+          {infoWindow(this.props.venues)}
         </div>
-        <div className="map-container col-sm-6 col-xs-8" style={{height: this.state.height, paddingRight: 0}}>
+        <div className="map-container col-sm-6 col-xs-8" style={{height: this.state.height, padding: 0}}>
           <Map
             style={{height: this.state.height}}
             center={[userInfo.latLng.lat, userInfo.latLng.lng]}

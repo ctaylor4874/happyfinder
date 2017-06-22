@@ -65,7 +65,7 @@ class LocationSearch extends Component {
           </Field>
         </div>
         <br/>
-        <div className="col-xs-12">
+        <div>
           <Field
             name="userLocation"
             component={renderTextField}

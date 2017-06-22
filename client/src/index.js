@@ -6,8 +6,9 @@ import thunk from 'redux-thunk';
 import registerServiceWorker from './registerServiceWorker';
 import injectTapEventPlugin from 'react-tap-event-plugin';
 
-import Routes from './Routes';
+
 import reducers from './reducers';
+import App from './App';
 import './index.css';
 
 const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
@@ -15,7 +16,7 @@ const createStoreWithMiddleware = applyMiddleware(thunk)(createStore);
 injectTapEventPlugin();
 ReactDOM.render(
   <Provider store={createStoreWithMiddleware(reducers)}>
-    <Routes />
+    <App />
   </Provider>
   , document.getElementById('root'));
 

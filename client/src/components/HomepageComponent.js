@@ -8,10 +8,8 @@ import LocationSearch from '../containers/LocationSearch';
 const HomepageComponent = () => (
   <div>
     <h1 className="welcome-header"><strong>Welcome To HappyFinder!</strong></h1>
-    <div className="row">
-      <div className="col-xs-12">
-        <LocationSearch />
-      </div>
+    <div>
+      <LocationSearch />
     </div>
     <p className="App-intro">
       HappyFinder finds happy hours near the given location!<br /><br />Try it out!

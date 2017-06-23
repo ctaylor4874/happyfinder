@@ -53,7 +53,7 @@ class Email extends Component {
       );
     }
     return (
-      <form action="mailto:ctaylor4874@gmail.com" method="post" encType="text/plain"
+      <form method="post" encType="text/plain"
             onSubmit={handleSubmit(this.onSubmit)}>
         <div className="col-xs-12">
           <div className="col-xs-12">

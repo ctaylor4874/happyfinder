@@ -16,10 +16,8 @@ export const makeMarkers = (venues) => (
     return (
       <Marker
         position={[venue.lat, venue.lng]}
-        data-fsVenueId={venue.fs_venue_id}
         riseOnHover={true}
-        ref={Marker => venue.fs_venue_id = Marker}
-        // onClick={(e) => e.target.openPopup()}
+        key={venue.id_}
       >
         <Popup>
           <span>

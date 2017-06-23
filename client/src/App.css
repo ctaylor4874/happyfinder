@@ -22,12 +22,15 @@ body {
     position: absolute;
     left: 0;
     bottom: 0;
-    height: 70px;
+    height: 75px;
     width: 100%;
     overflow:hidden;
 }
 .App {
     text-align: center;
+}
+.button-style{
+    margin: 12px;
 }
 .info-link{
     color: black;
@@ -48,11 +51,19 @@ body {
     text-shadow: 0 0 4px black !important;
 }
 
-#input-field {
+.input-field {
     font-weight: 600 !important;
+    margin: 10px 0 !important;
     color: lightgray !important;
     font-size: 30px !important;
-    overflow: hidden !important;
+    text-shadow: 0 0 3px black !important;
+}
+
+.email-field {
+    margin: 20px 0 !important;
+    font-weight: 400 !important;
+    color: lightgray !important;
+    font-size: 25px !important;
     text-shadow: 0 0 4px black !important;
 }
 

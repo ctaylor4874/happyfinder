@@ -5,7 +5,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 import {handleDatabase} from './db';
-import {makeURL, getData, venuesQuery} from './routeHandling';
+import {makeURL, getData, venuesQuery, venueQuery} from './routeHandling';
 import {getMailOptions, transport} from './emailHandling';
 
 const app = express();
@@ -44,6 +44,11 @@ app.post("/send-mail", (req, res) => {
 
   const mailOptions = getMailOptions(fromEmail, subject, message);
   transport(mailOptions, res);
+});
+
+app.post("/venue-data", (req, res) => {
+  const id_ = req.body.id_;
+  handleDatabase(null, venueQuery(id_), res);
 });
 
 app.listen(app.get('port'), () => {

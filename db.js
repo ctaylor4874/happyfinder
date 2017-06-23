@@ -30,7 +30,9 @@ exports.handleDatabase = (userInfo, req, res) => {
     connection.query(req, function (err, rows) {
       connection.release();
       if (!err) {
-        rows.push(userInfo);
+        if (userInfo){
+          rows.push(userInfo);
+        }
         res.json(rows);
       } else {
         console.log(err);

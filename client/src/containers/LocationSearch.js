@@ -9,14 +9,10 @@ import {reduxForm, Field} from 'redux-form';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import {selectStyle, style} from '../components/style';
+import {selectStyle, style, inputStyle} from '../components/style';
 import {renderTextField} from '../components/RenderTextField';
 import {renderSelectField} from '../components/RenderSelectField';
 import {getVenues} from '../actions/index';
-
-const buttonStyle = {
-  margin: 12,
-};
 
 class LocationSearch extends Component {
   constructor(props) {
@@ -69,7 +65,8 @@ class LocationSearch extends Component {
           <Field
             name="userLocation"
             component={renderTextField}
-            id="input-field"
+            className="input-field"
+            inputStyle={inputStyle}
             hintStyle={style}
             hintText="Location..."
           />
@@ -81,7 +78,7 @@ class LocationSearch extends Component {
             label="Search"
             primary={true}
             disabled={pristine || submitting}
-            style={buttonStyle}
+            className="button-style"
           />
         </div>
       </form>

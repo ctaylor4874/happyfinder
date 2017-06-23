@@ -41,7 +41,7 @@ class LocationSearch extends Component {
     const {handleSubmit, pristine, submitting} = this.props;
     const {redirect, userLocation, radius} = this.state;
     if (redirect) {
-      return <Redirect to={`/happyhours/${userLocation}/${radius}`} push />
+      return <Redirect to={`/happyhours/location/${userLocation}/${radius}`} push />
     }
     return (
       <form onSubmit={handleSubmit(this.onSubmit)}>

@@ -24,4 +24,9 @@ module.exports =  {
     makeURL : (userLocation) => {
       return `https://maps.googleapis.com/maps/api/geocode/json?address=${userLocation}&key=${GOOGLE_API_KEY}`
     },
+  venueQuery : (id_) => (
+    `SELECT *
+        FROM happyfinder 
+        WHERE id_ = ${id_};`
+  ),
 };

@@ -42,6 +42,7 @@ class Footer extends Component {
             onTouchTap={() => this.select(2)}
           />
         </BottomNavigation>
+        <p>2017 &copy; All Rights Reserved.</p>
       </Paper>
     );
   }

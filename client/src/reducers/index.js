@@ -6,11 +6,13 @@ import { reducer as formReducer } from 'redux-form';
 
 import venues from './VenuesReducer';
 import isLoading from './LoadingReducer';
-import errors from './ErrorsReducer'
+import errors from './ErrorsReducer';
+import emailResponse from './EmailReducer';
 
 const rootReducer = combineReducers({
   form: formReducer,
   venues,
+  emailResponse,
   errors,
   isLoading,
 });

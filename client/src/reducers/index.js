@@ -8,11 +8,13 @@ import venues from './VenuesReducer';
 import isLoading from './LoadingReducer';
 import errors from './ErrorsReducer';
 import emailResponse from './EmailReducer';
+import venueData from './VenueDataReducer';
 
 const rootReducer = combineReducers({
   form: formReducer,
   venues,
   emailResponse,
+  venueData,
   errors,
   isLoading,
 });

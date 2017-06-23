@@ -17,6 +17,11 @@ body {
     min-width: 80px;
     max-width: 168px;
 }
+#email-error{
+    font-weight: 700;
+    color: whitesmoke;
+    text-shadow: 0 0 4px black;
+}
 .footer {
     background-color: orange;
     position: absolute;

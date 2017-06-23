@@ -18,7 +18,7 @@ class MapComponent extends Component {
   }
 
   updateDimensions() {
-    const height = window.innerHeight - 134;
+    const height = window.innerHeight - 138;
     this.setState({height});
   }
 

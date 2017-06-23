@@ -2,7 +2,7 @@
  * Created by cody on 6/22/17.
  */
 import React, {Component} from 'react';
-import {Redirect} from 'react-router-dom';
+import {Redirect, Link} from 'react-router-dom';
 import AppBar from 'material-ui/AppBar';
 import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
@@ -18,6 +18,12 @@ class Items extends Component {
     this.onLinkTap = this.onLinkTap.bind(this);
   }
 
+  componentWillReceiveProps(){
+    this.setState({
+      redirectHome: false,
+    })
+  }
+
   onLinkTap() {
     this.setState({
       redirectHome: true,
@@ -28,11 +34,8 @@ class Items extends Component {
     const {redirectHome} = this.state;
 
     if (redirectHome) {
-      this.setState({
-        redirectHome: false,
-      });
       return (
-        <Redirect to="/" push/>
+        <Redirect to="/" push />
       )
     }
     return (
@@ -45,7 +48,7 @@ class Items extends Component {
       >
 
         <MenuItem primaryText="Back to Home" onTouchTap={this.onLinkTap.bind(this)}/>
-        <a className="mailto-link" href="mailto:cody.taylor@codybtaylor.com"><MenuItem primaryText="Contact Me"/></a>
+        <Link to='/contact'><MenuItem primaryText="Contact Me"/></Link>
       </IconMenu>
     )
   }

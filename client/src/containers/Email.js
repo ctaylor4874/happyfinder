@@ -42,7 +42,7 @@ class Email extends Component {
     if (sendError) {
       return (
         <div>
-          <h2>Error Sending Email...</h2>
+          <h2 id="email-error">Error Sending Email...</h2>
         </div>
       )
     }

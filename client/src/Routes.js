@@ -8,6 +8,7 @@ import MenuBar from './components/Nav';
 import Footer from './components/Footer';
 import HomepageComponent from './components/HomepageComponent';
 import MapLocations from './containers/MapLocations';
+import Email from './containers/Email';
 
 
 const Routes = () => (
@@ -16,6 +17,7 @@ const Routes = () => (
           <MenuBar/>
           <Route exact path="/" component={HomepageComponent} />
           <Route exact path="/happyhours/:userLocation/:radius" component={MapLocations} />
+          <Route exact path="/contact" component={Email} />
           <Footer/>
         </div>
       </BrowserRouter>

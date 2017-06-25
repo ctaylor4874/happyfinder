@@ -4,7 +4,7 @@
 import React from 'react';
 import SelectField from 'material-ui/SelectField';
 
-import {selectStyle} from './style';
+import {selectStyle} from '../styles/style';
 
 export const renderSelectField = ({
                                     input,

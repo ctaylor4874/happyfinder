@@ -9,7 +9,7 @@ import RaisedButton from 'material-ui/RaisedButton';
 import {sendEmail} from '../actions/index';
 import {renderTextField} from '../components/RenderTextField';
 import {reduxForm, Field} from 'redux-form';
-import {style, emailStyle} from '../components/style';
+import {style, emailStyle} from '../styles/style';
 
 class Email extends Component {
   constructor(props) {
@@ -63,7 +63,7 @@ class Email extends Component {
               className="email-field"
               inputStyle={emailStyle}
               hintStyle={style}
-              hintText="Email..."
+              hintText="Your Email..."
             />
           </div>
           <div className="col-xs-12">

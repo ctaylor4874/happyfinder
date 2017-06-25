@@ -9,10 +9,9 @@ import {reduxForm, Field} from 'redux-form';
 import MenuItem from 'material-ui/MenuItem';
 import RaisedButton from 'material-ui/RaisedButton';
 
-import {selectStyle, style, inputStyle} from '../components/style';
+import {selectStyle, style, inputStyle} from '../styles/style';
 import {renderTextField} from '../components/RenderTextField';
 import {renderSelectField} from '../components/RenderSelectField';
-import {getVenues} from '../actions/index';
 
 class LocationSearch extends Component {
   constructor(props) {
@@ -23,25 +22,22 @@ class LocationSearch extends Component {
       redirect: false,
       userLocation: null,
       radius: null,
-    }
-  }
+    };
+  };
 
   onSubmit(props) {
-    this.props.getVenues(props)
-      .then(
-        () => this.setState({
-          redirect: true,
-          userLocation: props.userLocation,
-          radius: props.radius
-        })
-      );
-  }
+    this.setState({
+      redirect: true,
+      userLocation: props.userLocation,
+      radius: props.radius
+    });
+  };
 
   render() {
     const {handleSubmit, pristine, submitting} = this.props;
     const {redirect, userLocation, radius} = this.state;
     if (redirect) {
-      return <Redirect to={`/happyhours/location/${userLocation}/${radius}`} push />
+      return <Redirect to={`/happyhours/location/${userLocation}/${radius}`} push/>
     }
     return (
       <form onSubmit={handleSubmit(this.onSubmit)}>
@@ -66,12 +62,11 @@ class LocationSearch extends Component {
             name="userLocation"
             component={renderTextField}
             className="input-field"
-            inputStyle={inputStyle}
             hintStyle={style}
             hintText="Location..."
+            inputStyle={inputStyle}
           />
         </div>
-
         <div className="col-xs-12">
           <RaisedButton
             type="submit"
@@ -110,8 +105,6 @@ LocationSearch = reduxForm({
   validate
 })(LocationSearch);
 
-LocationSearch = connect(mapStateToProps, {
-  getVenues,
-})(LocationSearch);
+LocationSearch = connect(mapStateToProps, null)(LocationSearch);
 
 export default LocationSearch;

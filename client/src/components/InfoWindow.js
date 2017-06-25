@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import {Link} from 'react-router-dom';
+import Divider from 'material-ui/Divider';
 
 export const infoWindow = (venues) => (
   venues.map((venue) => {
@@ -19,6 +20,7 @@ export const infoWindow = (venues) => (
         </h4>
         <p>{venue.category}<span className="info-span">{Math.round(Number(venue.milesfromuser) * 100) / 100}
           miles</span></p>
+        <Divider/>
       </div>
     )
   })

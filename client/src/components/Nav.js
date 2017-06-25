@@ -8,6 +8,7 @@ import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
 import IconButton from 'material-ui/IconButton';
 import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+import Divider from 'material-ui/Divider';
 
 class Items extends Component {
   constructor(props) {
@@ -61,6 +62,7 @@ class Items extends Component {
       >
 
         <MenuItem primaryText="Back to Home" onTouchTap={this.onLinkTap.bind(this)}/>
+        <Divider/>
         <MenuItem primaryText="Contact Me" onTouchTap={this.onContactTap.bind(this)} />
       </IconMenu>
     )

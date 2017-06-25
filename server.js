@@ -5,7 +5,7 @@ import express from 'express';
 import bodyParser from 'body-parser';
 
 import {handleDatabase} from './db';
-import {makeURL, getData, venuesQuery, venueQuery} from './routeHandling';
+import {makeURL, getData, venuesQuery, venueQuery} from './dataHandling';
 import {getMailOptions, transport} from './emailHandling';
 
 const app = express();

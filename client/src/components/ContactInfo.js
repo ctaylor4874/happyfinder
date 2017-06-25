@@ -5,35 +5,38 @@ import React from 'react';
 import Paper from 'material-ui/Paper';
 import {List, ListItem} from 'material-ui/List';
 import Divider from 'material-ui/Divider';
-import CommunicationCall from 'material-ui/svg-icons/communication/call';
-import CommunicationChatBubble from 'material-ui/svg-icons/communication/chat-bubble';
 import {indigo500} from 'material-ui/styles/colors';
-import CommunicationEmail from 'material-ui/svg-icons/communication/email';
+import Business from 'material-ui/svg-icons/communication/business';
+import Link from 'material-ui/svg-icons/content/link';
+import CommunicationPhone from 'material-ui/svg-icons/communication/phone';
 
-const DetailsCard = ({title, data, phone_number}) => (
+const ContactInfo = ({address, url, phoneNumber, strippedNumber}) => (
   <Paper zDepth={2}>
     <List>
       <ListItem
-        rightIcon={<CommunicationEmail color={indigo500}/>}
-        primaryText="Website"
-        secondaryText={url}
+        rightIcon={<Business color={indigo500}/>}
+        primaryText="Address"
+        onTouchTap={(e) => window.open(`https://www.google.com/maps/search/?api=1&query=${address}`)}
+        secondaryText={address ? address : 'Not Available'}
+        secondaryTextLines={2}
       />
-    </List>
-    <Divider inset={true}/>
-    <List>
+      <Divider />
       <ListItem
-        rightIcon={<CommunicationCall color={indigo500}/>}
+        rightIcon={<CommunicationPhone color={indigo500}/>}
         primaryText="Phone Number"
-        secondaryText={phone_number ? phone_number : 'Not Available'}
+        onTouchTap={(e) => window.open(`tel:${strippedNumber}`)}
+        secondaryText={phoneNumber ? phoneNumber : 'Not Available'}
       />
-
+      <Divider />
       <ListItem
-        insetChildren={true}
-        primaryText="ali_connors@example.com"
-        secondaryText="Work"
+        rightIcon={<Link color={indigo500}/>}
+        primaryText="Website"
+        onTouchTap={() => window.open(`${url}`)}
+        secondaryText={url ? url : 'Not Available'}
+        secondaryTextLines={2}
       />
     </List>
   </Paper>
 );
 
-export default DetailsCard;
+export default ContactInfo;

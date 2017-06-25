@@ -3,6 +3,7 @@ import {Map, TileLayer} from 'react-leaflet';
 import {latLngBounds} from 'leaflet';
 import {connect} from 'react-redux';
 
+import Loading from '../components/Loading';
 import {infoWindow} from '../components/InfoWindow';
 import {getVenues} from '../actions/index';
 import {makeMarkers} from '../components/Markers';
@@ -14,6 +15,8 @@ class MapComponent extends Component {
     super(props);
     this.state = {
       height: null,
+      mapLoaded: false,
+      noResults: false,
     };
   }
 
@@ -24,7 +27,17 @@ class MapComponent extends Component {
 
   componentWillMount() {
     this.props.getVenues(this.props.match.params)
-      .then(this.updateDimensions());
+      .then(() => {
+        if (this.props.venues.length) {
+          this.updateDimensions();
+          this.setState({mapLoaded: true});
+        } else {
+          this.setState({
+            noResults: true,
+            mapLoaded: true,
+          });
+        }
+      });
   }
 
   componentDidMount() {
@@ -37,13 +50,17 @@ class MapComponent extends Component {
 
   render() {
     const {userInfo, venues} = this.props;
+    const {mapLoaded, noResults} = this.state;
     let bounds;
-    if (!(venues.length)) {
+
+    if (!(mapLoaded)) {
       return (
-        <div className="container">
-          <h1 style={{color: 'white', marginLeft: '20', marginTop: '20'}}>Loading...</h1>
-        </div>
+        <Loading/>
       )
+    } else if (noResults){
+      return(
+        <div>No Results Avalable for Requested Location</div>
+      );
     } else {
       bounds = latLngBounds([userInfo.latLng.lat, userInfo.latLng.lng]);
       venues.forEach((data) => {

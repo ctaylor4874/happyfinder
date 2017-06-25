@@ -3,9 +3,11 @@
  */
 import React, {Component} from 'react';
 import {connect} from 'react-redux';
-import DetailsCard from '../components/DetailsCard';
-import {Card, CardTitle} from 'material-ui/Card';
 
+import ContactInfo from '../components/ContactInfo';
+import VenueInfo from '../components/VenueInfo';
+import Hours from '../components/HoursComponent';
+import Loading from '../components/Loading';
 import {getVenueData} from '../actions/index';
 
 class VenueDetails extends Component {
@@ -14,28 +16,52 @@ class VenueDetails extends Component {
 
     this.state = {
       venue: this.props.match.params.id_,
+      venueLoaded: false,
     };
   }
 
   componentWillMount() {
-    this.props.getVenueData(this.state.venue);
+    this.props.getVenueData(this.state.venue)
+      .then(() =>
+        this.setState({
+          venueLoaded: true,
+        })
+      );
   }
 
   render() {
+    const {venueLoaded} = this.state;
     const {venueData} = this.props;
+    console.log(venueData)
+    if (!(venueLoaded)){
+      return(
+        <Loading/>
+      )
+    }
     return (
       <div>
-        <Card>
-          <CardTitle title={venueData.name} subtitle={venueData.category}/>
-        </Card>
-        <DetailsCard
-        title="Website"
-        data={venueData.url}
-        />
-        <DetailsCard
-        title="Website"
-        data={venueData.url}
-        />
+        <div className="col-sm-4 col-xs-4 col-xs-offset-2 venue-details-div">
+          <VenueInfo
+            happyHourDetails={venueData.happy_hour_string}
+            name={venueData.name}
+            category={venueData.category}
+            rating={venueData.rating}
+            price={venueData.price}
+          />
+        </div>
+        <div className="col-sm-4 col-xs-4 venue-details-div">
+          <ContactInfo
+            phoneNumber={venueData.phone_number}
+            strippedNumber={venueData.strippedNumber}
+            url={venueData.url}
+            address={venueData.address}
+          />
+        </div>
+        <div className="col-sm-4 col-xs-8 col-xs-offset-2 venue-details-div">
+          <Hours
+            hours={venueData.hours}
+          />
+        </div>
       </div>
     )
   }

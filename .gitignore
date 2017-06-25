@@ -182,3 +182,4 @@ xcuserdata/
 !/client/src/containers/MapLocations.js
 !/client/src/components/RenderTextArea.js
 !/db.js
+!/client/src/components/RenderSelectField.js

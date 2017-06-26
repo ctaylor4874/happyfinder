@@ -40,9 +40,11 @@ app.get("/api/:userLocation/:radius", function (req, res) {
 app.post("/send-mail", (req, res) => {
   const fromEmail = req.body.fromEmail,
     subject = req.body.subject,
-    message = req.body.message;
+    message = req.body.message,
+    city = req.body.city,
+    state = req.body.state;
 
-  const mailOptions = getMailOptions(fromEmail, subject, message);
+  const mailOptions = getMailOptions(fromEmail, subject, message, city, state);
   transport(mailOptions, res);
 });
 

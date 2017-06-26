@@ -10,6 +10,7 @@ import HomepageComponent from './components/HomepageComponent';
 import MapLocations from './containers/MapLocations';
 import VenueDetails from './containers/VenueDetails';
 import Email from './containers/Email';
+import RequestNewCity from './containers/RequestNewCity';
 
 
 const Routes = () => (
@@ -19,6 +20,7 @@ const Routes = () => (
           <Route exact path="/" component={HomepageComponent} />
           <Route exact path="/happyhours/location/:userLocation/:radius" component={MapLocations} />
           <Route exact path="/happyhours/venue/:id_" component={VenueDetails} />
+          <Route exact path="/request" component={RequestNewCity} />
           <Route exact path="/contact" component={Email} />
           <Footer/>
         </div>

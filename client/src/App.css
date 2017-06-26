@@ -13,7 +13,9 @@ body {
     margin: 0 0 70px;
     padding: 25px;
 }
-
+.suggestion-div * {
+    text-align: center !important;
+}
 .homepage-component {
     position: relative;
     display: block;
@@ -106,14 +108,22 @@ body {
     font-size: 25px !important;
     text-shadow: 0 0 4px black !important;
 }
-
+.autosuggest-div{
+    margin: 20px 0 !important;
+}
 .welcome-header {
     font-size: 50px;
     color: #d3d3d3;
     letter-spacing: 1px;
     text-shadow: 2px 2px 2px black;
 }
-
+.states-autocomplete > input{
+    font-weight: 600 !important;
+    color: #d3d3d3 !important;
+    font-size: 20px !important;
+    text-shadow: 0 0 4px black !important;
+    -webkit-text-fill-color: #d3d3d3 !important;
+}
 .App-header {
     max-height: 150px;
     color: #d3d3d3;

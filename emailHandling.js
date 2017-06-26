@@ -18,8 +18,13 @@ module.exports = {
     return ({
       from: fromEmail,
       to: mailUser,
-      subject: '<' + fromEmail + '> at HappyFinder! Subject:  ' + (city && state) ? 'New Location Request.' : subject,
-      text: (city && state) ? 'Message: ' + message + '\nCity: ' + city + '\nState: ' + state : message,
+      subject: '<' + fromEmail + '> at HappyFinder! Subject:  ' + ((city && state) ?
+          'New HappyFinder Location Request.' :
+          subject
+      ),
+      text: ((city && state) ?
+        'Message: ' + message + '\nCity: ' + city + '\nState: ' + state :
+        message),
     })
   },
 

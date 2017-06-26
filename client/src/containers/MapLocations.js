@@ -3,6 +3,7 @@ import {Map, TileLayer} from 'react-leaflet';
 import {latLngBounds} from 'leaflet';
 import {connect} from 'react-redux';
 
+import {NoResultsFound} from '../components/NoResults';
 import Loading from '../components/Loading';
 import {infoWindow} from '../components/InfoWindow';
 import {getVenues} from '../actions/index';
@@ -57,9 +58,9 @@ class MapComponent extends Component {
       return (
         <Loading/>
       )
-    } else if (noResults){
-      return(
-        <div>No Results Avalable for Requested Location</div>
+    } else if (noResults) {
+      return (
+        <NoResultsFound params={this.props} />
       );
     } else {
       bounds = latLngBounds([userInfo.latLng.lat, userInfo.latLng.lng]);

@@ -14,12 +14,12 @@ const transporter = createTransport({
 });
 
 module.exports = {
-  getMailOptions: (fromEmail, subject, message) => {
+  getMailOptions: (fromEmail, subject, message, city, state) => {
     return ({
       from: fromEmail,
       to: mailUser,
-      subject: '<' + fromEmail + '> at HappyFinder! Subject:  ' + subject,
-      text: message,
+      subject: '<' + fromEmail + '> at HappyFinder! Subject:  ' + (city && state) ? 'New Location Request.' : subject,
+      text: (city && state) ? 'Message: ' + message + '\nCity: ' + city + '\nState: ' + state : message,
     })
   },
 

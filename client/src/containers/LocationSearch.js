@@ -47,6 +47,7 @@ class LocationSearch extends Component {
             name="radius"
             component={renderSelectField}
             label="Within..."
+            className="input-field"
             labelStyle={style}
             id="select-field"
           >

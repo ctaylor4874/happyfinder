@@ -6,7 +6,7 @@ import React from 'react';
 import LocationSearch from '../containers/LocationSearch';
 
 const HomepageComponent = () => (
-  <div>
+  <div className="homepage-component">
     <h1 className="welcome-header"><strong>Welcome To HappyFinder!</strong></h1>
     <div>
       <LocationSearch />

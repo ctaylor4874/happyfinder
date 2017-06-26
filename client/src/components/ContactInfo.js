@@ -14,6 +14,13 @@ const ContactInfo = ({address, url, phoneNumber, strippedNumber}) => (
   <Paper zDepth={2}>
     <List>
       <ListItem
+        rightIcon={<CommunicationPhone color={indigo500}/>}
+        primaryText="Phone Number"
+        onTouchTap={(e) => window.open(`tel:${strippedNumber}`)}
+        secondaryText={phoneNumber ? phoneNumber : 'Not Available'}
+      />
+      <Divider />
+      <ListItem
         rightIcon={<Business color={indigo500}/>}
         primaryText="Address"
         onTouchTap={(e) => window.open(`https://www.google.com/maps/search/?api=1&query=${address}`)}
@@ -22,18 +29,10 @@ const ContactInfo = ({address, url, phoneNumber, strippedNumber}) => (
       />
       <Divider />
       <ListItem
-        rightIcon={<CommunicationPhone color={indigo500}/>}
-        primaryText="Phone Number"
-        onTouchTap={(e) => window.open(`tel:${strippedNumber}`)}
-        secondaryText={phoneNumber ? phoneNumber : 'Not Available'}
-      />
-      <Divider />
-      <ListItem
         rightIcon={<Link color={indigo500}/>}
         primaryText="Website"
         onTouchTap={() => window.open(`${url}`)}
         secondaryText={url ? url : 'Not Available'}
-        secondaryTextLines={2}
       />
     </List>
   </Paper>

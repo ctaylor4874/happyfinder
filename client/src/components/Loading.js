@@ -6,7 +6,7 @@ import CircularProgress from 'material-ui/CircularProgress';
 import {circleProgressStyle} from '../styles/style';
 
 const Loading = () => (
-  <div className="container">
+  <div className="container loading-container">
     <CircularProgress style={circleProgressStyle} size={80} thickness={7} />
   </div>
 );

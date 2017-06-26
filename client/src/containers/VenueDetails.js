@@ -15,32 +15,47 @@ class VenueDetails extends Component {
     super(props);
 
     this.state = {
+      height: null,
       venue: this.props.match.params.id_,
       venueLoaded: false,
     };
   }
 
+  updateDimensions() {
+    const height = window.innerHeight - 138;
+    this.setState({height});
+  }
+
+  componentDidMount() {
+    window.addEventListener("resize", this.updateDimensions.bind(this));
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("resize", this.updateDimensions.bind(this));
+  }
+
   componentWillMount() {
     this.props.getVenueData(this.state.venue)
-      .then(() =>
-        this.setState({
-          venueLoaded: true,
-        })
+      .then(() => {
+          this.setState({
+            venueLoaded: true,
+          });
+          this.updateDimensions();
+        }
       );
   }
 
   render() {
     const {venueLoaded} = this.state;
     const {venueData} = this.props;
-    console.log(venueData)
-    if (!(venueLoaded)){
-      return(
+    if (!(venueLoaded)) {
+      return (
         <Loading/>
       )
     }
     return (
-      <div>
-        <div className="col-sm-4 col-xs-4 col-xs-offset-2 venue-details-div">
+      <div style={{overflowY: 'scroll', height: this.state.height}}>
+        <div className="col-xs-8 col-xs-offset-2 venue-details-div">
           <VenueInfo
             happyHourDetails={venueData.happy_hour_string}
             name={venueData.name}
@@ -49,7 +64,7 @@ class VenueDetails extends Component {
             price={venueData.price}
           />
         </div>
-        <div className="col-sm-4 col-xs-4 venue-details-div">
+        <div className="col-xs-8 col-xs-offset-2 venue-details-div">
           <ContactInfo
             phoneNumber={venueData.phone_number}
             strippedNumber={venueData.strippedNumber}
@@ -57,7 +72,7 @@ class VenueDetails extends Component {
             address={venueData.address}
           />
         </div>
-        <div className="col-sm-4 col-xs-8 col-xs-offset-2 venue-details-div">
+        <div className="col-xs-8 col-xs-offset-2 venue-details-div">
           <Hours
             hours={venueData.hours}
           />

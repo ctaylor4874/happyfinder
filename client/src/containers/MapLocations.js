@@ -105,4 +105,4 @@ function mapStateToProps(state) {
   }
 }
 
-export default connect(mapStateToProps, {getVenues})(MapComponent)
+export default connect(mapStateToProps, {getVenues})(MapComponent);

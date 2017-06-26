@@ -8,8 +8,10 @@
     "babel-core": "^6.24.1",
     "body-parser": "^1.17.2",
     "express": "^4.15.3",
+    "lodash": "latest",
     "mysql": "^2.13.0",
-    "nodemailer": "^4.0.1"
+    "nodemailer": "^4.0.1",
+    "underscore": "^1.8.3"
   },
   "scripts": {
     "start": "concurrently \"npm run server\" \"npm run client\"",

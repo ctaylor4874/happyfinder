@@ -14,6 +14,11 @@ body {
     padding: 25px;
 }
 
+.homepage-component {
+    position: relative;
+    display: block;
+}
+
 #github-link {
     min-width: 80px;
     max-width: 168px;
@@ -25,12 +30,15 @@ body {
     text-shadow: 0 0 4px black;
 }
 
-#hours-list {
-    padding: 10px;
+.footer, .venue-details-div {
+    -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)"; /* IE 8 */
+    filter: alpha(opacity=60); /* IE 5-7 */
+    -moz-opacity: 0.6; /* Netscape */
+    -khtml-opacity: 0.6; /* Safari 1.x */
+    opacity: 0.6;
 }
 
 .footer {
-    background-color: orange;
     position: absolute;
     left: 0;
     bottom: 0;
@@ -55,6 +63,10 @@ body {
     text-decoration: none !important;
 }
 
+.loading-container {
+    height: 400px;
+}
+
 .info-span {
     float: right;
 }
@@ -69,14 +81,16 @@ body {
     -webkit-text-fill-color: #d3d3d3 !important;
     color: #d3d3d3 !important;
 }
-.venue-details-div{
+
+.venue-details-div {
     padding: 1%;
 }
 
-.hours-list, .hours-list li{
+.hours-list, .hours-list li {
     list-style-type: none;
-    padding: 3% 0;
+    padding: 2px 0;
 }
+
 .input-field {
     font-weight: 600 !important;
     margin: 10px 0 !important;

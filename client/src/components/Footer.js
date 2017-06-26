@@ -13,47 +13,49 @@ const personIcon = <Person />;
 const detailsIcon = <Details />;
 
 export const Footer = () => (
-      <Paper zDepth={1} className="footer">
-        <BottomNavigation>
-          <div className="col-xs-4">
-            <a
-              id="contact-links"
-              href="https://github.com/ctaylor4874"
-              target="_blank"
-              rel="noopener noreferrer">
-              <BottomNavigationItem
-                label="Visit My Github"
-                icon={codeIcon}
-              />
-            </a>
-          </div>
-          <div className="col-xs-4">
-            <a
-              id="contact-links"
-              href="https://www.linkedin.com/in/cody-taylor"
-              target="_blank"
-              rel="noopener noreferrer">
-              <BottomNavigationItem
-                label="Visit My LinkedIn"
-                icon={personIcon}
-              />
-            </a>
-          </div>
-          <div className="col-xs-4">
-            <a
-              id="contact-links"
-              href="https://github.com/ctaylor4874/happyfinder"
-              target="_blank"
-              rel="noopener noreferrer">
-              <BottomNavigationItem
-                label="View Project Details"
-                icon={detailsIcon}
-              />
-            </a>
-          </div>
-        </BottomNavigation>
-        <p>2017 &copy; All Rights Reserved.</p>
-      </Paper>
-    );
+  <div className="footer">
+    <Paper zDepth={1}>
+      <BottomNavigation>
+        <div className="col-xs-4">
+          <a
+            id="contact-links"
+            href="https://github.com/ctaylor4874"
+            target="_blank"
+            rel="noopener noreferrer">
+            <BottomNavigationItem
+              label="Visit My Github"
+              icon={codeIcon}
+            />
+          </a>
+        </div>
+        <div className="col-xs-4">
+          <a
+            id="contact-links"
+            href="https://www.linkedin.com/in/cody-taylor"
+            target="_blank"
+            rel="noopener noreferrer">
+            <BottomNavigationItem
+              label="Visit My LinkedIn"
+              icon={personIcon}
+            />
+          </a>
+        </div>
+        <div className="col-xs-4">
+          <a
+            id="contact-links"
+            href="https://github.com/ctaylor4874/happyfinder"
+            target="_blank"
+            rel="noopener noreferrer">
+            <BottomNavigationItem
+              label="View Project Details"
+              icon={detailsIcon}
+            />
+          </a>
+        </div>
+      </BottomNavigation>
+      <p>2017 &copy; All Rights Reserved.</p>
+    </Paper>
+  </div>
+);
 
 export default Footer;

@@ -4,8 +4,6 @@
 import React from 'react';
 import AutoComplete from 'material-ui/AutoComplete';
 
-import {style, emailStyle} from '../styles/style';
-
 export const renderAutoCompleteField = ({
                                     input,
                                     label,

@@ -8,6 +8,7 @@ exports.handleDatabase = (userInfo, req, res) => {
   const user = process.env.HAPPYFINDER_USER;
   const password = process.env.HAPPYFINDER_PASSWORD;
   const database = process.env.HAPPYFINDER_DATABASE;
+  const debug = process.env.DEBUG;
 
   const pool = mysql.createPool({
     connectionLimit: 100,
@@ -15,7 +16,7 @@ exports.handleDatabase = (userInfo, req, res) => {
     user,
     password,
     database,
-    debug: true
+    debug: (debug ? debug : false)
   });
 
   pool.getConnection(function (err, connection) {
@@ -30,7 +31,7 @@ exports.handleDatabase = (userInfo, req, res) => {
     connection.query(req, function (err, rows) {
       connection.release();
       if (!err) {
-        if (userInfo){
+        if (userInfo) {
           rows.push(userInfo);
         }
         res.json(rows);

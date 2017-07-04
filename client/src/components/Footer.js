@@ -47,7 +47,7 @@ export const Footer = () => (
             target="_blank"
             rel="noopener noreferrer">
             <BottomNavigationItem
-              label="Project Code"
+              label="Project Repo"
               icon={detailsIcon}
             />
           </a>

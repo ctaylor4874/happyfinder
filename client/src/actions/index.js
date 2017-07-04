@@ -7,8 +7,8 @@ export const SENT_EMAIL = 'SENT_EMAIL';
 export const VENUE_DATA = 'VENUE_DATA';
 
 function getAPIData(props) {
-  const url = `/api/${props.userLocation}/${props.radius}`;
-  return axios.get(url);
+  const url = `/api`;
+  return axios.post(url, props);
 }
 
 export function getVenues(props) {

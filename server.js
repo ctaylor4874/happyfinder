@@ -17,12 +17,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('client/build'));
-}
-
 app.set('port', (process.env.PORT || 3001));
-
 
 app.post("/api", function (req, res) {
   let userInfo = [];

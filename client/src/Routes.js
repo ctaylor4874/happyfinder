@@ -2,7 +2,7 @@
  * Created by codytaylor on 6/3/17.
  */
 import React from 'react';
-import {BrowserRouter, Route} from 'react-router-dom';
+import {BrowserRouter, Route, Redirect} from 'react-router-dom';
 
 import MenuBar from './components/Nav';
 import Footer from './components/Footer';
@@ -22,6 +22,7 @@ const Routes = () => (
           <Route exact path="/happyhours/venue/:id_" component={VenueDetails} />
           <Route exact path="/request" component={RequestNewCity} />
           <Route exact path="/contact" component={Email} />
+          <Redirect to="/" />
           <Footer/>
         </div>
       </BrowserRouter>

@@ -5,10 +5,9 @@ export const ERROR = 'ERROR';
 export const IS_LOADING = 'IS_LOADING';
 export const SENT_EMAIL = 'SENT_EMAIL';
 export const VENUE_DATA = 'VENUE_DATA';
-const ROOT_URL = 'http://localhost:3001';
 
 function getAPIData(props) {
-  const url = `${ROOT_URL}/api`;
+  const url = `/api`;
   return axios.post(url, props);
 }
 
@@ -24,7 +23,7 @@ export function getVenues(props) {
 }
 
 function sendEmailData(props){
-  const url = `${ROOT_URL}/send-mail`;
+  const url = `/send-mail`;
   return axios.post(url, props)
 }
 
@@ -40,7 +39,7 @@ export function sendEmail(props){
 }
 
 function _getVenueData(id_){
-  const url = `${ROOT_URL}/venue-data`;
+  const url = `/venue-data`;
   return axios.post(url, {id_})
 }
 

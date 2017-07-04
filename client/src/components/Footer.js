@@ -23,7 +23,7 @@ export const Footer = () => (
             target="_blank"
             rel="noopener noreferrer">
             <BottomNavigationItem
-              label="Visit My Github"
+              label="Github"
               icon={codeIcon}
             />
           </a>
@@ -35,7 +35,7 @@ export const Footer = () => (
             target="_blank"
             rel="noopener noreferrer">
             <BottomNavigationItem
-              label="Visit My LinkedIn"
+              label="LinkedIn"
               icon={personIcon}
             />
           </a>
@@ -47,7 +47,7 @@ export const Footer = () => (
             target="_blank"
             rel="noopener noreferrer">
             <BottomNavigationItem
-              label="View Project Details"
+              label="Project Code"
               icon={detailsIcon}
             />
           </a>

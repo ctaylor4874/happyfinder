@@ -24,10 +24,10 @@ if (process.env.NODE_ENV === 'production') {
 app.set('port', (process.env.PORT || 3001));
 
 
-app.get("/api/:userLocation/:radius", function (req, res) {
+app.post("/api", function (req, res) {
   let userInfo = [];
-  let userLocation = req.params.userLocation;
-  let radius = req.params.radius || 5;
+  let userLocation = req.body.userLocation;
+  let radius = req.body.radius || 5;
   const url = makeURL(userLocation);
 
   getData(url)

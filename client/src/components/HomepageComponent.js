@@ -12,7 +12,7 @@ const HomepageComponent = () => (
       <LocationSearch />
     </div>
     <p className="App-intro">
-      HappyFinder finds happy hours near the given location!
+      HappyFinder finds happy hours for you!
     </p>
   </div>
 );

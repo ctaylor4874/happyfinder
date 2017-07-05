@@ -17,9 +17,11 @@
     "start": "concurrently \"npm run server\" \"npm run client\"",
     "server": "babel-node server.js",
     "client": "babel-node start-client.js",
-    "setup": "babel-node setup.js"
+    "setup": "babel-node setup.js",
+    "build": "babel src -d build"
   },
   "devDependencies": {
+    "babel-cli": "^6.24.1",
     "babel-preset-es2015": "^6.24.1",
     "concurrently": "^3.4.0"
   }

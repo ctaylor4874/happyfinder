@@ -17,12 +17,7 @@ app.use(bodyParser.urlencoded({     // to support URL-encoded bodies
   extended: true
 }));
 
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static('client/build'));
-}
-
 app.set('port', (process.env.PORT || 3001));
-
 
 app.post("/api", function (req, res) {
   let userInfo = [];
@@ -58,6 +53,10 @@ app.post("/send-mail", (req, res) => {
 app.post("/venue-data", (req, res) => {
   const id_ = escape(req.body.id_);
   handleDatabase(null, venueQuery(id_), res);
+});
+
+app.get('*', function (request, response){
+  response.sendFile(path.resolve(__dirname, 'client/public', 'index.html'))
 });
 
 app.listen(app.get('port'), () => {

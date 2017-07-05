@@ -10,6 +10,7 @@ import {handleDatabase} from './db';
 import {makeURL, getData, venuesQuery, venueQuery} from './dataHandling';
 import {getMailOptions, transport} from './emailHandling';
 
+const path = require('path');
 const app = express();
 
 app.use(bodyParser.json());       // to support JSON-encoded bodies

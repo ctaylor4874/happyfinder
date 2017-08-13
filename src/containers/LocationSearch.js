@@ -1,16 +1,17 @@
+/* eslint-disable no-class-assign */
 /**
  * Created by cody on 5/31/17.
  */
-import React, {Component} from 'react';
-import {Redirect} from 'react-router-dom';
-import {connect} from 'react-redux';
-import {reduxForm, Field} from 'redux-form';
-import MenuItem from 'material-ui/MenuItem';
-import RaisedButton from 'material-ui/RaisedButton';
+import React, { Component } from "react";
+import { Redirect } from "react-router-dom";
+import { connect } from "react-redux";
+import { reduxForm, Field } from "redux-form";
+import MenuItem from "material-ui/MenuItem";
+import RaisedButton from "material-ui/RaisedButton";
 
-import {selectStyle, style, inputStyle} from '../styles/style';
-import {renderTextField} from '../components/RenderTextField';
-import {renderSelectField} from '../components/RenderSelectField';
+import { selectStyle, style, inputStyle } from "../styles/style";
+import renderTextField from "../components/RenderTextField";
+import renderSelectField from "../components/RenderSelectField";
 
 class LocationSearch extends Component {
   constructor(props) {
@@ -20,9 +21,9 @@ class LocationSearch extends Component {
     this.state = {
       redirect: false,
       userLocation: null,
-      radius: null,
+      radius: null
     };
-  };
+  }
 
   onSubmit(props) {
     this.setState({
@@ -30,13 +31,15 @@ class LocationSearch extends Component {
       userLocation: props.userLocation,
       radius: props.radius
     });
-  };
+  }
 
   render() {
-    const {handleSubmit, pristine, submitting} = this.props;
-    const {redirect, userLocation, radius} = this.state;
+    const { handleSubmit, pristine, submitting } = this.props;
+    const { redirect, userLocation, radius } = this.state;
     if (redirect) {
-      return <Redirect to={`/happyhours/location/${userLocation}/${radius}`} push/>
+      return (
+        <Redirect to={`/happyhours/location/${userLocation}/${radius}`} push />
+      );
     }
     return (
       <form onSubmit={handleSubmit(this.onSubmit)}>
@@ -50,14 +53,34 @@ class LocationSearch extends Component {
             labelStyle={style}
             id="select-field"
           >
-            <MenuItem value={5} menuItemStyle={selectStyle} primaryText="5 miles"/>
-            <MenuItem value={10} menuItemStyle={selectStyle} primaryText="10 miles"/>
-            <MenuItem value={15} menuItemStyle={selectStyle} primaryText="15 miles"/>
-            <MenuItem value={25} menuItemStyle={selectStyle} primaryText="25 miles"/>
-            <MenuItem value={50} menuItemStyle={selectStyle} primaryText="50 miles"/>
+            <MenuItem
+              value={5}
+              menuItemStyle={selectStyle}
+              primaryText="5 miles"
+            />
+            <MenuItem
+              value={10}
+              menuItemStyle={selectStyle}
+              primaryText="10 miles"
+            />
+            <MenuItem
+              value={15}
+              menuItemStyle={selectStyle}
+              primaryText="15 miles"
+            />
+            <MenuItem
+              value={25}
+              menuItemStyle={selectStyle}
+              primaryText="25 miles"
+            />
+            <MenuItem
+              value={50}
+              menuItemStyle={selectStyle}
+              primaryText="50 miles"
+            />
           </Field>
         </div>
-        <br/>
+        <br />
         <div>
           <Field
             name="userLocation"
@@ -72,23 +95,23 @@ class LocationSearch extends Component {
           <RaisedButton
             type="submit"
             label="Search"
-            primary={true}
+            primary
             disabled={pristine || submitting}
             className="button-style"
           />
         </div>
       </form>
-    )
+    );
   }
 }
 
 function validate(values) {
   const errors = {};
   if (!values.userLocation) {
-    errors.userLocation = 'Enter a location...';
+    errors.userLocation = "Enter a location...";
   }
   if (!values.radius) {
-    errors.radius = 'Select a Radius...';
+    errors.radius = "Select a Radius...";
   }
   return errors;
 }
@@ -98,11 +121,11 @@ function mapStateToProps(state) {
     errors: state.errors,
     isLoading: state.isLoading,
     userInfo: state.venues.userInfo,
-    venues: state.venues.venues,
-  }
+    venues: state.venues.venues
+  };
 }
 LocationSearch = reduxForm({
-  form: 'LocationSearchForm',
+  form: "LocationSearchForm",
   validate
 })(LocationSearch);
 

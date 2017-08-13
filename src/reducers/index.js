@@ -1,14 +1,14 @@
 /**
  * Created by codytaylor on 5/23/17.
  */
-import {combineReducers} from 'redux';
-import { reducer as formReducer } from 'redux-form';
+import { combineReducers } from "redux";
+import { reducer as formReducer } from "redux-form";
 
-import venues from './VenuesReducer';
-import isLoading from './LoadingReducer';
-import errors from './ErrorsReducer';
-import emailResponse from './EmailReducer';
-import venueData from './VenueDataReducer';
+import venues from "./VenuesReducer";
+import isLoading from "./LoadingReducer";
+import errors from "./ErrorsReducer";
+import emailResponse from "./EmailReducer";
+import venueData from "./VenueDataReducer";
 
 const rootReducer = combineReducers({
   form: formReducer,
@@ -16,7 +16,7 @@ const rootReducer = combineReducers({
   emailResponse,
   venueData,
   errors,
-  isLoading,
+  isLoading
 });
 
 export default rootReducer;

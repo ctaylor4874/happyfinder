@@ -1,14 +1,14 @@
 /**
  * Created by cody on 6/23/17.
  */
-import React, {Component} from 'react';
-import {connect} from 'react-redux';
+import React, { Component } from "react";
+import { connect } from "react-redux";
 
-import ContactInfo from '../components/ContactInfo';
-import VenueInfo from '../components/VenueInfo';
-import Hours from '../components/HoursComponent';
-import Loading from '../components/Loading';
-import {getVenueData} from '../actions/index';
+import ContactInfo from "../components/ContactInfo";
+import VenueInfo from "../components/VenueInfo";
+import Hours from "../components/HoursComponent";
+import Loading from "../components/Loading";
+import { getVenueData } from "../actions/index";
 
 class VenueDetails extends Component {
   constructor(props) {
@@ -17,13 +17,17 @@ class VenueDetails extends Component {
     this.state = {
       height: null,
       venue: this.props.match.params.id_,
-      venueLoaded: false,
+      venueLoaded: false
     };
   }
 
-  updateDimensions() {
-    const height = window.innerHeight - 138;
-    this.setState({height});
+  componentWillMount() {
+    this.props.getVenueData(this.state.venue).then(() => {
+      this.setState({
+        venueLoaded: true
+      });
+      this.updateDimensions();
+    });
   }
 
   componentDidMount() {
@@ -34,27 +38,19 @@ class VenueDetails extends Component {
     window.removeEventListener("resize", this.updateDimensions.bind(this));
   }
 
-  componentWillMount() {
-    this.props.getVenueData(this.state.venue)
-      .then(() => {
-          this.setState({
-            venueLoaded: true,
-          });
-          this.updateDimensions();
-        }
-      );
+  updateDimensions() {
+    const height = window.innerHeight - 138;
+    this.setState({ height });
   }
 
   render() {
-    const {venueLoaded} = this.state;
-    const {venueData} = this.props;
-    if (!(venueLoaded)) {
-      return (
-        <Loading/>
-      )
+    const { venueLoaded } = this.state;
+    const { venueData } = this.props;
+    if (!venueLoaded) {
+      return <Loading />;
     }
     return (
-      <div style={{overflowY: 'scroll', height: this.state.height}}>
+      <div style={{ overflowY: "scroll", height: this.state.height }}>
         <div className="col-xs-8 col-xs-offset-2 venue-details-div">
           <VenueInfo
             happyHourDetails={venueData.happy_hour_string}
@@ -73,20 +69,18 @@ class VenueDetails extends Component {
           />
         </div>
         <div className="col-xs-8 col-xs-offset-2 venue-details-div">
-          <Hours
-            hours={venueData.hours}
-          />
+          <Hours hours={venueData.hours} />
         </div>
       </div>
-    )
+    );
   }
 }
 
 function mapStateToProps(state) {
   return {
     errors: state.errors,
-    venueData: state.venueData.venueData,
-  }
+    venueData: state.venueData.venueData
+  };
 }
 
-export default connect(mapStateToProps, {getVenueData})(VenueDetails)
+export default connect(mapStateToProps, { getVenueData })(VenueDetails);

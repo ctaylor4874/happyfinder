@@ -1,7 +1,7 @@
 /**
  * Created by cody on 6/23/17.
  */
-import mysql from 'mysql';
+import mysql from "mysql";
 
 exports.handleDatabase = (userInfo, req, res) => {
   const host = process.env.HAPPYFINDER_HOST;
@@ -16,19 +16,19 @@ exports.handleDatabase = (userInfo, req, res) => {
     user,
     password,
     database,
-    debug: (debug ? debug : false)
+    debug: debug || false
   });
 
-  pool.getConnection(function (err, connection) {
+  pool.getConnection((err, connection) => {
     if (err) {
       connection.release();
-      res.json({"code": 100, "status": "Error in connection database"});
+      res.json({ code: 100, status: "Error in connection database" });
       return;
     }
 
-    console.log('connected as id ' + connection.threadId);
+    console.log(`connected as id ${connection.threadId}`);
 
-    connection.query(req, function (err, rows) {
+    connection.query(req, (err, rows) => {
       connection.release();
       if (!err) {
         if (userInfo) {
@@ -40,8 +40,8 @@ exports.handleDatabase = (userInfo, req, res) => {
       }
     });
 
-    connection.on('error', function (err) {
-      res.json({"code": 100, "status": "Error in connection database"});
+    connection.on("error", () => {
+      res.json({ code: 100, status: "Error in connection database" });
     });
-  })
+  });
 };

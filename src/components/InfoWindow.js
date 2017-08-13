@@ -1,12 +1,12 @@
 /**
  * Created by cody on 6/21/17.
  */
-import React from 'react';
-import {Link} from 'react-router-dom';
-import Divider from 'material-ui/Divider';
+import React from "react";
+import { Link } from "react-router-dom";
+import Divider from "material-ui/Divider";
 
-export const infoWindow = (venues) => (
-  venues.map((venue) => {
+const infoWindow = venues =>
+  venues.map(venue => {
     return (
       <div className="info-window" key={venue.id_}>
         <h4>
@@ -14,14 +14,21 @@ export const infoWindow = (venues) => (
             to={`/happyhours/venue/${venue.id_}`}
             className="info-link"
             id={venue.id_}
-            key={venue.id_}>
+            key={venue.id_}
+          >
             {venue.name}
           </Link>
         </h4>
-        <p>{venue.category}<span className="info-span">{Math.round(Number(venue.milesfromuser) * 100) / 100}
-          miles</span></p>
-        <Divider/>
+        <p>
+          {venue.category}
+          <span className="info-span">
+            {Math.round(Number(venue.milesfromuser) * 100) / 100}
+            miles
+          </span>
+        </p>
+        <Divider />
       </div>
-    )
-  })
-);
+    );
+  });
+
+export default infoWindow;

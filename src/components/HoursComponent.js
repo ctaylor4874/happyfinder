@@ -4,26 +4,32 @@
 /**
  * Created by cody on 6/23/17.
  */
-import React from 'react';
-import Divider from 'material-ui/Divider';
-import Paper from 'material-ui/Paper';
+import React from "react";
+import Divider from "material-ui/Divider";
+import Paper from "material-ui/Paper";
 
-const Hours = ({hours}) => (
+const Hours = ({ hours }) =>
   <Paper zDepth={2}>
     <div className="row">
       <div className="col-xs-12">
         <h4>Business Hours</h4>
       </div>
     </div>
-    <Divider/>
+    <Divider />
     <div className="row">
       <div className="col-xs-12">
         <ul className="hours-list">
-          {hours.map((day) => <div><Divider/><li className="hours-list-item">{day}</li></div>)}
+          {hours.map(day =>
+            <div>
+              <Divider />
+              <li className="hours-list-item">
+                {day}
+              </li>
+            </div>
+          )}
         </ul>
       </div>
     </div>
-  </Paper>
-);
+  </Paper>;
 
 export default Hours;

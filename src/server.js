@@ -1,13 +1,13 @@
 /**
  * Created by cody on 6/2/17.
  */
-import express from "express";
-import bodyParser from "body-parser";
-import { escape } from "mysql";
-
 import { handleDatabase } from "./db";
 import { makeURL, getData, venuesQuery, venueQuery } from "./dataHandling";
 import { getMailOptions, transport } from "./emailHandling";
+
+const express = require('express');
+const bodyParser = require('body-parser');
+const escape = require('mysql').escape();
 
 require("dotenv").config();
 

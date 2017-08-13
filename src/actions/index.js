@@ -32,11 +32,9 @@ export function sendEmail(props) {
   return dispatch =>
     sendEmailData(props).then(
       response => {
-        console.log(response);
         dispatch({ type: SENT_EMAIL, payload: response });
       },
       error => {
-        console.log(error);
         dispatch({ type: ERROR, payload: error.response });
       }
     );

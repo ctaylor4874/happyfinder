@@ -1,0 +1,147 @@
+html {
+  background: url(./images/header.jpg) no-repeat center center fixed;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  -o-background-size: cover;
+  background-size: cover;
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  background-color: transparent;
+  margin: 0 0 70px;
+  padding: 25px;
+}
+.suggestion-div * {
+  text-align: center !important;
+}
+.homepage-component {
+  position: relative;
+  display: block;
+}
+
+#github-link {
+  min-width: 80px;
+  max-width: 168px;
+}
+
+#email-error {
+  font-weight: 700;
+  color: #d3d3d3;
+  text-shadow: 0 0 4px black;
+}
+
+.footer, .venue-details-div {
+  -ms-filter: "progid:DXImageTransform.Microsoft.Alpha(Opacity=60)"; /* IE 8 */
+  filter: alpha(opacity=60); /* IE 5-7 */
+  -moz-opacity: 0.6; /* Netscape */
+  -khtml-opacity: 0.6; /* Safari 1.x */
+  opacity: 0.6;
+}
+
+.footer {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  height: 75px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.App {
+  text-align: center;
+}
+
+.button-style {
+  margin: 12px;
+}
+
+.info-link {
+  color: black;
+}
+
+.mailto-link {
+  text-decoration: none !important;
+}
+
+.loading-container {
+  height: 400px;
+}
+
+.info-span {
+  float: right;
+}
+
+.info-window {
+  text-align: left;
+}
+
+#select-field * {
+  font-size: 25px !important;
+  text-shadow: 0 0 4px black !important;
+  -webkit-text-fill-color: #d3d3d3 !important;
+  color: #d3d3d3 !important;
+}
+
+.venue-details-div {
+  padding: 1%;
+}
+
+.hours-list, .hours-list li {
+  list-style-type: none;
+  padding: 2px 0;
+}
+
+.input-field {
+  font-weight: 600 !important;
+  margin: 10px 0 !important;
+  color: #d3d3d3 !important;
+  font-size: 30px !important;
+  text-shadow: 0 0 3px black !important;
+}
+
+.email-field {
+  margin: 20px 0 !important;
+  font-weight: 400 !important;
+  color: #d3d3d3 !important;
+  font-size: 25px !important;
+  text-shadow: 0 0 4px black !important;
+}
+.autosuggest-div{
+  margin: 20px 0 !important;
+}
+.welcome-header {
+  font-size: 50px;
+  color: #d3d3d3;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 2px black;
+}
+.states-autocomplete > input{
+  font-weight: 600 !important;
+  color: #d3d3d3 !important;
+  font-size: 20px !important;
+  text-shadow: 0 0 4px black !important;
+  -webkit-text-fill-color: #d3d3d3 !important;
+}
+.App-header {
+  max-height: 150px;
+  color: #d3d3d3;
+}
+
+.finder-text {
+  font-weight: 700;
+  font-size: 40px;
+  color: #d3d3d3;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 2px black;
+}
+
+.App-intro {
+  margin-top: 50px;
+  font-weight: 600;
+  font-size: 30px;
+  color: #d3d3d3;
+  letter-spacing: 1px;
+  text-shadow: 2px 2px 2px black;
+}

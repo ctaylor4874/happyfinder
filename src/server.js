@@ -1,13 +1,17 @@
 /**
  * Created by cody on 6/2/17.
  */
-import { handleDatabase } from "./db";
-import { makeURL, getData, venuesQuery, venueQuery } from "./dataHandling";
-import { getMailOptions, transport } from "./emailHandling";
+const handleDatabase = require('./db').handleDatabase;
+const venueQuery = require('./dataHandling').venueQuery;
+const getData = require('./dataHandling').getData;
+const makeURL = require('./dataHandling').makeURL;
+const venuesQuery = require('./dataHandling').venuesQuery;
+const getMailOptions = require('./emailHandling').getMailOptions;
+const transport = require('./emailHandling').transport;
 
 const express = require('express');
 const bodyParser = require('body-parser');
-const escape = require('mysql').escape();
+const escape = require('mysql').escape;
 
 require("dotenv").config();
 

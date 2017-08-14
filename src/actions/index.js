@@ -7,7 +7,7 @@ export const SENT_EMAIL = "SENT_EMAIL";
 export const VENUE_DATA = "VENUE_DATA";
 
 function getAPIData(props) {
-  const url = `http://localhost:3001/api/userLocation`;
+  const url = `http://127.0.0.1:3001/api/userLocation`;
   return axios.post(url, props);
 }
 
@@ -24,7 +24,7 @@ export function getVenues(props) {
 }
 
 function sendEmailData(props) {
-  const url = `http://localhost:3001/api/send-mail`;
+  const url = `http://127.0.0.1:3001/api/send-mail`;
   return axios.post(url, props);
 }
 
@@ -41,7 +41,7 @@ export function sendEmail(props) {
 }
 
 function _getVenueData(id_) {
-  const url = `http://localhost:3001/api/venue-data`;
+  const url = `http://127.0.0.1:3001/api/venue-data`;
   return axios.post(url, { id_ });
 }
 

@@ -56,7 +56,7 @@
     "eject": "react-scripts eject",
     "cleanup": "eslint $(git diff --name-only |grep .js$) --fix && prettier $(git diff --name-only |grep .js$) --write"
   },
-  "main": "index.js",
+  "main": "server.js",
   "license": "MIT",
   "description": "HappyFinder finds happy hours near the given location.",
   "repository": "git@github.com:ctaylor4874/happyfinder.git",

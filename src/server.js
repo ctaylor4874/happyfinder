@@ -4,7 +4,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import { escape } from "mysql";
-
+import path from 'path';
 import { handleDatabase } from "./db";
 import { makeURL, getData, venuesQuery, venueQuery } from "./dataHandling";
 import { getMailOptions, transport } from "./emailHandling";
@@ -16,25 +16,26 @@ const router = express.Router();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(express.static(path.join(__dirname, 'client/build')));
 
-app.use((req, res, next) => {
-  res.setHeader("Access-Control-Allow-Origin", "*");
-  res.setHeader("Access-Control-Allow-Credentials", "true");
-  res.setHeader(
-    "Access-Control-Allow-Methods",
-    "GET,HEAD,OPTIONS,POST,PUT,DELETE"
-  );
-  res.setHeader(
-    "Access-Control-Allow-Headers",
-    "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers"
-  );
-  res.setHeader("Cache-Control", "no-cache");
-  next();
-});
+// app.use((req, res, next) => {
+//   res.setHeader("Access-Control-Allow-Origin", "*");
+//   res.setHeader("Access-Control-Allow-Credentials", "true");
+//   res.setHeader(
+//     "Access-Control-Allow-Methods",
+//     "GET,HEAD,OPTIONS,POST,PUT,DELETE"
+//   );
+//   res.setHeader(
+//     "Access-Control-Allow-Headers",
+//     "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers"
+//   );
+//   res.setHeader("Cache-Control", "no-cache");
+//   next();
+// });
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT || 5000;
 
-router.post("/userLocation", (req, res) => {
+app.post("/api/userLocation", (req, res) => {
   const userInfo = [];
   const userLocation = req.body.userLocation;
   const radius = req.body.radius || 5;
@@ -56,7 +57,7 @@ router.post("/userLocation", (req, res) => {
     }
   );
 });
-router.post("/send-mail", (req, res) => {
+app.post("/api/send-mail", (req, res) => {
   const fromEmail = escape(req.body.fromEmail);
   const subject = escape(req.body.subject);
   const message = escape(req.body.message);
@@ -67,12 +68,16 @@ router.post("/send-mail", (req, res) => {
   transport(mailOptions, res);
 });
 
-router.post("/venue-data", (req, res) => {
+app.post("/api/venue-data", (req, res) => {
   const id = escape(req.body.id_);
   handleDatabase(null, venueQuery(id), res);
 });
 
-app.use("/api", router);
+app.get('*', (req, res) => {
+  res.sendFile(path.join(`${__dirname}/client/build/index.html`));
+});
+
+// app.use("/api", app);
 
 app.listen(port, () => {
   console.log(`Find the server at: http://localhost:${port}/`);

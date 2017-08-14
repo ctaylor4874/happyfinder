@@ -1,5 +1,5 @@
 # HappyFinder
-HappyFinder is a responsive web app that finds happy hours near the
+HappyFinder is a responsive web application that finds happy hours near the
 user-provided location and displays each happy hour on a map for
 the user to browse and interact with.
 
@@ -9,8 +9,7 @@ the application is dedicated to getting data from different sources as well as
 parsing, cleaning, and storing the data.
 
 
-HappyFinder makes extensive use of the Foursquare API, and was built using Flask / Python, Postgres, and JS.
-
+HappyFinder makes extensive use of Foursquare and Google API's.  The application was built using JavaScript, React, Node.js, Express, Python, and MySQL.
 ## Table of Contents
 
 - [Data Management](#data-management)

@@ -4,7 +4,7 @@
 import express from "express";
 import bodyParser from "body-parser";
 import { escape } from "mysql";
-import path from 'path';
+import path from "path";
 import { handleDatabase } from "./db";
 import { makeURL, getData, venuesQuery, venueQuery } from "./dataHandling";
 import { getMailOptions, transport } from "./emailHandling";
@@ -12,26 +12,10 @@ import { getMailOptions, transport } from "./emailHandling";
 require("dotenv").config();
 
 const app = express();
-const router = express.Router();
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
-app.use(express.static(path.join(__dirname, 'client/build')));
-
-// app.use((req, res, next) => {
-//   res.setHeader("Access-Control-Allow-Origin", "*");
-//   res.setHeader("Access-Control-Allow-Credentials", "true");
-//   res.setHeader(
-//     "Access-Control-Allow-Methods",
-//     "GET,HEAD,OPTIONS,POST,PUT,DELETE"
-//   );
-//   res.setHeader(
-//     "Access-Control-Allow-Headers",
-//     "Access-Control-Allow-Headers, Origin,Accept, X-Requested-With, Content-Type, Access-Control-Request-Method, Access-Control-Request-Headers"
-//   );
-//   res.setHeader("Cache-Control", "no-cache");
-//   next();
-// });
+app.use(express.static(path.join(__dirname, "/../build")));
 
 const port = process.env.PORT || 5000;
 
@@ -53,6 +37,7 @@ app.post("/api/userLocation", (req, res) => {
     },
     error => {
       console.log("There was an error getting the lat/lng of the user.");
+      res.end();
       return error;
     }
   );
@@ -73,8 +58,8 @@ app.post("/api/venue-data", (req, res) => {
   handleDatabase(null, venueQuery(id), res);
 });
 
-app.get('*', (req, res) => {
-  res.sendFile(path.join(`${__dirname}/client/build/index.html`));
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "/../build/index.html"));
 });
 
 // app.use("/api", app);

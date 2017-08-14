@@ -32,10 +32,8 @@ module.exports = {
   transport: (mailOptions, res) => {
     transporter.sendMail(mailOptions, (error, info) => {
       if (error) {
-        console.log(`ERROR${error}`);
         res.json(error);
       } else {
-        console.log(`Email Sent.${info.response}`);
         res.json(info.response);
       }
     });

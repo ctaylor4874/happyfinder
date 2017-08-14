@@ -19,29 +19,18 @@ exports.handleDatabase = (userInfo, req, res) => {
     debug: debug || false
   });
 
-  pool.getConnection((err, connection) => {
-    if (err) {
-      connection.release();
-      res.json({ code: 100, status: "Error in connection database" });
-      return;
-    }
-
-    console.log(`connected as id ${connection.threadId}`);
-
-    connection.query(req, (err, rows) => {
-      connection.release();
-      if (!err) {
-        if (userInfo) {
-          rows.push(userInfo);
-        }
-        res.json(rows);
-      } else {
-        console.log(err);
+  pool.query(req, (err, rows) => {
+    if (!err) {
+      if (userInfo) {
+        rows.push(userInfo);
       }
-    });
+      res.json(rows);
+    } else {
+      res.end();
+    }
+  });
 
-    connection.on("error", () => {
-      res.json({ code: 100, status: "Error in connection database" });
-    });
+  pool.on("error", () => {
+    res.json({ code: 100, status: "Error in connection database" });
   });
 };

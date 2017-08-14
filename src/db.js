@@ -11,7 +11,7 @@ exports.handleDatabase = (userInfo, req, res) => {
   const debug = process.env.DEBUG;
 
   const pool = mysql.createPool({
-    connectionLimit: 100,
+    connectionLimit: 20,
     host,
     user,
     password,

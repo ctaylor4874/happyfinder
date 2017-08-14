@@ -47,7 +47,8 @@
     "react-scripts": "1.0.11"
   },
   "scripts": {
-    "start": "concurrently \"yarn runServer\" \"yarn serve\"",
+    "startApp": "concurrently \"yarn runServer\" \"yarn serve\"",
+    "start": "react-scripts start",
     "serve": "serve -s build",
     "runServer": "babel-node src/server.js",
     "build": "react-scripts build",
@@ -57,7 +58,7 @@
   },
   "main": "index.js",
   "license": "MIT",
-  "description": "HappyFinder finds happy hours near the given location." ,
+  "description": "HappyFinder finds happy hours near the given location.",
   "repository": "git@github.com:ctaylor4874/happyfinder.git",
   "author": "Cody Taylor <ctaylor4874@gmail.com>"
 }

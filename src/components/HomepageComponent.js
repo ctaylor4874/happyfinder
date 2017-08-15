@@ -13,7 +13,6 @@ const HomepageComponent = () =>
     <div>
       <LocationSearch />
     </div>
-    <p className="App-intro">HappyFinder finds happy hours for you!</p>
   </div>;
 
 export default HomepageComponent;

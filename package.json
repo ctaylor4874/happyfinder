@@ -48,6 +48,7 @@
   },
   "scripts": {
     "startApp": "concurrently \"yarn runServer\" \"yarn serve\"",
+    "startDev": "concurrently \"yarn runServer\" \"yarn start\"",
     "start": "react-scripts start",
     "serve": "serve -s build",
     "runServer": "babel-node src/server.js",

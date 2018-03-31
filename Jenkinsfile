@@ -41,7 +41,6 @@ node {
                   -v /usr/src/app/node_modules \
                   -p 3000:3000 \
                   --name happyfinder \
-                  --restart=always \
                   --rm \
                   ctaylor4874/happyfinder:latest
             fi

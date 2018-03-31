@@ -36,13 +36,12 @@ node {
                     docker rm happyfinder
                 fi
                 # run your container
-                docker run -it \
-                  -v ${PWD}:/usr/src/app \
-                  -v /usr/src/app/node_modules \
-                  -p 3000:3000 \
-                  --name happyfinder \
-                  --rm \
-                  ctaylor4874/happyfinder:latest
+                docker run -v ${PWD}:/usr/src/app \
+                -v /usr/src/app/node_modules-d \
+                -p 3000:3000 \
+                --name happyfinder \
+                --restart=always \
+                ctaylor4874/happyfinder:latest
             fi
             """
             }

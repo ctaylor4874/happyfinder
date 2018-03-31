@@ -37,7 +37,8 @@ node {
                 fi
                 # run your container
                 docker run -v ${PWD}:/usr/src/app \
-                -v /usr/src/app/node_modules-d \
+                -v /usr/src/app/node_modules \
+                -d \
                 -p 3000:3000 \
                 --name happyfinder \
                 --restart=always \

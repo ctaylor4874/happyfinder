@@ -46,4 +46,4 @@ class MakeMarkers extends React.Component {
   }
 }
 
-export default makeMarkers;
+export default MakeMarkers;

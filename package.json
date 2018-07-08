@@ -14,7 +14,7 @@
     "material-ui": "^0.18.1",
     "mysql": "^2.13.0",
     "nodemailer": "^4.0.1",
-    "prop-types": "^15.5.10",
+    "prop-types": "^15.6.2",
     "react": "^15.6.1",
     "react-autosuggest": "^9.3.1",
     "react-dom": "^15.6.1",

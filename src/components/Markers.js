@@ -2,24 +2,26 @@
  * Created by cody on 6/20/17.
  */
 import React from "react";
-import { Link } from "react-router-dom";
+import PropTypes from 'prop-types'
 import { Marker, Popup } from "react-leaflet";
 
-const makeMarkers = venues =>
-  venues.map(venue => {
-    return (
-      <Marker position={[venue.lat, venue.lng]} riseOnHover key={venue.id_}>
-        <Popup>
+class MakeMarkers extends React.Component {
+  static propTypes = {
+    venues: PropTypes.arrayOf(PropTypes.any).isRequired
+  }
+
+  goToVenue(id){
+    this.context.router.history.push(`/happyhours/venue/${id}`);
+  }
+
+  render() {
+    return this.props.venues.map(venue => {
+      return (
+        <Marker position={[venue.lat, venue.lng]} riseOnHover key={venue.id_}>
+          <Popup>
           <span>
-            <h3>
-              <Link
-                to={`/happyhours/venue/${venue.id_}`}
-                className="info-link"
-                id={venue.id_}
-                key={venue.id_}
-              >
+            <h3 onClick={() => this.goToVenue(venue.id_)}>
               {venue.name}
-              </Link>
             </h3>
             <p>
               <strong>Category: </strong>
@@ -37,9 +39,11 @@ const makeMarkers = venues =>
                 : venue.happy_hour_string.toUpperCase()}
             </p>
           </span>
-        </Popup>
-      </Marker>
-    );
-  });
+          </Popup>
+        </Marker>
+      );
+    });
+  }
+}
 
 export default makeMarkers;

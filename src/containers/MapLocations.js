@@ -7,7 +7,7 @@ import NoResultsFound from "../components/NoResults";
 import Loading from "../components/Loading";
 import infoWindow from "../components/InfoWindow";
 import { getVenues } from "../actions/index";
-import makeMarkers from "../components/Markers";
+import MakeMarkers from "../components/Markers";
 import userMarker from "../components/UserMarker";
 import radius from "../components/SearchRadius";
 
@@ -88,7 +88,7 @@ class MapComponent extends Component {
               url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
               attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
             />
-            {makeMarkers(venues)}
+            <MakeMarkers venues={venues} />
             {userMarker(userInfo)}
             {radius(userInfo)}
           </Map>

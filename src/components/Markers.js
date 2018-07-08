@@ -2,6 +2,7 @@
  * Created by cody on 6/20/17.
  */
 import React from "react";
+import { Link } from "react-router-dom";
 import { Marker, Popup } from "react-leaflet";
 
 const makeMarkers = venues =>
@@ -10,9 +11,16 @@ const makeMarkers = venues =>
       <Marker position={[venue.lat, venue.lng]} riseOnHover key={venue.id_}>
         <Popup>
           <span>
+            <Link
+              to={`/happyhours/venue/${venue.id_}`}
+              className="info-link"
+              id={venue.id_}
+              key={venue.id_}
+            >
             <h3>
               {venue.name}
             </h3>
+          </Link>
             <p>
               <strong>Category: </strong>
               {venue.category}

@@ -53,6 +53,7 @@
     "serve": "serve -s build",
     "runServer": "babel-node src/server.js",
     "build": "react-scripts build",
+    "postbuild": "rimraf build/**/*.map && scp -r build/* happyfinder:~/programs/happyfinder/build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "cleanup": "eslint $(git diff --name-only |grep .js$) --fix && prettier $(git diff --name-only |grep .js$) --write"

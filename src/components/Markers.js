@@ -11,16 +11,16 @@ const makeMarkers = venues =>
       <Marker position={[venue.lat, venue.lng]} riseOnHover key={venue.id_}>
         <Popup>
           <span>
-            <Link
-              to={`/happyhours/venue/${venue.id_}`}
-              className="info-link"
-              id={venue.id_}
-              key={venue.id_}
-            >
             <h3>
+              <Link
+                to={`/happyhours/venue/${venue.id_}`}
+                className="info-link"
+                id={venue.id_}
+                key={venue.id_}
+              >
               {venue.name}
+              </Link>
             </h3>
-          </Link>
             <p>
               <strong>Category: </strong>
               {venue.category}

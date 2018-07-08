@@ -181,6 +181,6 @@ xcuserdata/
 !/happyfinder-react/src/index.js
 !/client/src/containers/MapLocations.js
 !/client/src/components/RenderTextArea.js
-!/src/db.js
+!/src/server/db.js
 !/client/src/components/RenderSelectField.js
 !/client/src/

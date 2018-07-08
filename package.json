@@ -30,7 +30,9 @@
   "devDependencies": {
     "babel-cli": "^6.24.1",
     "babel-eslint": "^7.2.3",
+    "babel-preset-env": "^1.7.0",
     "babel-preset-es2015": "^6.24.1",
+    "babel-preset-react": "^6.24.1",
     "concurrently": "^3.4.0",
     "eslint": "^3.19.0",
     "eslint-config-airbnb": "^15.0.2",
@@ -52,8 +54,8 @@
     "start": "react-scripts start",
     "serve": "serve -s build",
     "runServer": "babel-node src/server.js",
-    "build": "react-scripts build",
-    "postbuild": "rimraf build/**/*.map && scp -r build/* happyfinder:~/programs/happyfinder/build",
+    "build": "react-scripts build && babel src/server -d lib",
+    "postbuild": "rimraf build/**/*.map && scp -r build/* happyfinder:~/programs/happyfinder/build && scp -r lib/* happyfinder:~/programs/happyfinder/lib",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject",
     "cleanup": "eslint $(git diff --name-only |grep .js$) --fix && prettier $(git diff --name-only |grep .js$) --write"

@@ -4,11 +4,14 @@
 import React from "react";
 import { Marker, Popup } from "react-leaflet";
 
-const makeMarkers = venues =>
+const makeMarkers = (venues, setSelectedVenue) =>
   venues.map(venue => {
     return (
       <Marker position={[venue.lat, venue.lng]} riseOnHover key={venue.id_}>
-        <Popup>
+        <Popup onOpen={() => {
+          console.log(venue)
+          setSelectedVenue(venue.id_ || '')
+        }}>
           <span>
             <h3>
               {venue.name}

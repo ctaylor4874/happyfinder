@@ -5,6 +5,7 @@ export const ERROR = "ERROR";
 export const IS_LOADING = "IS_LOADING";
 export const SENT_EMAIL = "SENT_EMAIL";
 export const VENUE_DATA = "VENUE_DATA";
+export const SET_SELECTED_VENUE = "SET_SELECTED_VENUE";
 
 function getAPIData(props) {
   const url = `/api/userLocation`;
@@ -55,4 +56,8 @@ export function getVenueData(id_) {
         dispatch({ type: ERROR, payload: error.response });
       }
     );
+}
+
+export function setSelectedVenue(venueId) {
+  return { type: SET_SELECTED_VENUE, payload: venueId }
 }

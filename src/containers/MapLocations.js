@@ -6,7 +6,7 @@ import { connect } from "react-redux";
 import NoResultsFound from "../components/NoResults";
 import Loading from "../components/Loading";
 import infoWindow from "../components/InfoWindow";
-import { getVenues } from "../actions/index";
+import { getVenues, setSelectedVenue } from "../actions/index";
 import makeMarkers from "../components/Markers";
 import userMarker from "../components/UserMarker";
 import radius from "../components/SearchRadius";
@@ -58,6 +58,12 @@ class MapComponent extends Component {
       return <NoResultsFound params={this.props} />;
     }
     const bounds = latLngBounds([userInfo.latLng.lat, userInfo.latLng.lng]);
+    const venuesArray = [...this.props.venues];
+    const index = this.props.venues.indexOf(this.props.venues.find(venue => venue.id_ === this.props.selectedVenue));
+    let selected = [];
+    if(index !== -1){
+      selected = venuesArray.splice(index, 1);
+    }
     venues.forEach(data => {
       bounds.extend([data.lat, data.lng]);
     });
@@ -72,7 +78,7 @@ class MapComponent extends Component {
             height: this.state.height
           }}
         >
-          {infoWindow(this.props.venues)}
+          {infoWindow([...selected, ...venuesArray], this.props.selectedVenue)}
         </div>
         <div
           className="map-container col-sm-6 col-xs-8"
@@ -88,7 +94,7 @@ class MapComponent extends Component {
               url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"
               attribution="&copy; <a href=&quot;http://osm.org/copyright&quot;>OpenStreetMap</a> contributors"
             />
-            {makeMarkers(venues)}
+            {makeMarkers(venues, this.props.setSelectedVenue)}
             {userMarker(userInfo)}
             {radius(userInfo)}
           </Map>
@@ -103,8 +109,9 @@ function mapStateToProps(state) {
     errors: state.errors,
     isLoading: state.isLoading,
     userInfo: state.venues.userInfo,
+    selectedVenue: state.venues.selectedVenue,
     venues: state.venues.venues
   };
 }
 
-export default connect(mapStateToProps, { getVenues })(MapComponent);
+export default connect(mapStateToProps, { getVenues, setSelectedVenue })(MapComponent);

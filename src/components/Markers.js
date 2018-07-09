@@ -9,7 +9,6 @@ const makeMarkers = (venues, setSelectedVenue) =>
     return (
       <Marker position={[venue.lat, venue.lng]} riseOnHover key={venue.id_}>
         <Popup onOpen={() => {
-          console.log(venue)
           setSelectedVenue(venue.id_ || '')
         }}>
           <span>

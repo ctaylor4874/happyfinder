@@ -5,7 +5,7 @@ import React from "react";
 import { Link } from "react-router-dom";
 import Divider from "material-ui/Divider";
 
-const infoWindow = (venues, selectedVenue) =>
+const infoWindow = (venues) =>
   venues.map(venue => {
     return (
       <div className="info-window" key={venue.id_}>
@@ -16,7 +16,7 @@ const infoWindow = (venues, selectedVenue) =>
             id={venue.id_}
             key={venue.id_}
           >
-            {venue.id_ === selectedVenue ? <mark>{venue.name}</mark> : venue.name}
+            {venue.name}
           </Link>
         </h4>
         <p>

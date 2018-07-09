@@ -78,7 +78,7 @@ class MapComponent extends Component {
             height: this.state.height
           }}
         >
-          {infoWindow([...selected, ...venuesArray], this.props.selectedVenue)}
+          {infoWindow([...selected, ...venuesArray])}
         </div>
         <div
           className="map-container col-sm-6 col-xs-8"
